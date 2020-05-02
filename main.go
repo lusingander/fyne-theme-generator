@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"strconv"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
@@ -54,7 +55,7 @@ func (c *colorSelector) setColor(clr color.Color) {
 	c.entry.SetText(hexColorString(clr))
 	c.rect.FillColor = clr
 	c.update(clr)
-	mainWindow.Content().Refresh()
+	reflesh()
 }
 
 func hexColorString(c color.Color) string {
@@ -75,6 +76,30 @@ func colorConfigure(label string, sampleWidget fyne.CanvasObject, defaultColor c
 	}
 }
 
+func intConfigure(label string, sampleWidget fyne.CanvasObject, defaultValue int, update func(int)) []fyne.CanvasObject {
+	entry := widget.NewEntry()
+	entry.SetText(strconv.Itoa(defaultValue))
+	entry.OnChanged = func(s string) {
+		if n, err := strconv.Atoi(s); err == nil {
+			update(n)
+			reflesh()
+		}
+	}
+	return []fyne.CanvasObject{
+		widget.NewLabel(label),
+		entry,
+		sampleWidget,
+	}
+}
+
+func readonlyStringConfigure(label string, sampleWidget fyne.CanvasObject, defaultValue string) []fyne.CanvasObject {
+	return []fyne.CanvasObject{
+		widget.NewLabel(label),
+		widget.NewLabel(defaultValue),
+		sampleWidget,
+	}
+}
+
 func configures(ts *themeSetting) []fyne.CanvasObject {
 	cs := make([]fyne.CanvasObject, 0)
 	cs = append(cs, colorConfigure("Background color", empty(), ts.BackgroundColor(), ts.SetBackgroundColor)...)
@@ -91,6 +116,16 @@ func configures(ts *themeSetting) []fyne.CanvasObject {
 	cs = append(cs, colorConfigure("Focus color", empty(), ts.FocusColor(), ts.SetFocusColor)...)
 	cs = append(cs, colorConfigure("Scroll bar color", empty(), ts.ScrollBarColor(), ts.SetScrollBarColor)...)
 	cs = append(cs, colorConfigure("Shadow color", empty(), ts.ShadowColor(), ts.SetShadowColor)...)
+	cs = append(cs, intConfigure("Text size", empty(), ts.TextSize(), ts.SetTextSize)...)
+	cs = append(cs, readonlyStringConfigure("Text font", empty(), ts.TextFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text bold font", empty(), ts.TextBoldFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text italic font", empty(), ts.TextItalicFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text bold italic font", empty(), ts.TextBoldItalicFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text monospace font", empty(), ts.TextMonospaceFont().Name())...)
+	cs = append(cs, intConfigure("Padding", empty(), ts.Padding(), ts.SetPadding)...)
+	cs = append(cs, intConfigure("Icon inline size", empty(), ts.IconInlineSize(), ts.SetIconInlineSize)...)
+	cs = append(cs, intConfigure("Scroll bar size", empty(), ts.ScrollBarSize(), ts.SetScrollBarSize)...)
+	cs = append(cs, intConfigure("Scroll bar small size", empty(), ts.ScrollBarSmallSize(), ts.SetScrollBarSmallSize)...)
 	return cs
 }
 
@@ -131,6 +166,10 @@ func dummyEntry() fyne.CanvasObject {
 var (
 	mainWindow fyne.Window
 )
+
+func reflesh() {
+	mainWindow.Content().Refresh()
+}
 
 func run(args []string) error {
 	a := app.New()
