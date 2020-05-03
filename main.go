@@ -164,19 +164,19 @@ func dummyEntry() fyne.CanvasObject {
 }
 
 var (
-	mainWindow fyne.Window
+	currentThemeSetting *themeSetting
 )
 
 func reflesh() {
-	mainWindow.Content().Refresh()
+	fyne.CurrentApp().Settings().SetTheme(currentThemeSetting)
 }
 
 func run(args []string) error {
 	a := app.New()
 	ts := newThemeSetting()
+	currentThemeSetting = ts
 	a.Settings().SetTheme(ts)
 	w := a.NewWindow("Fyne theme generator")
-	mainWindow = w
 	w.SetContent(
 		fyne.NewContainerWithLayout(
 			layout.NewGridLayoutWithColumns(3),
