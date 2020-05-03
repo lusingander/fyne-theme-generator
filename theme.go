@@ -41,6 +41,8 @@ type themeSetting struct {
 
 func newThemeSetting() *themeSetting {
 	return &themeSetting{
+		packageName:         "main",
+		themeStructName:     "myTheme",
 		backgroundColor:     theme.DarkTheme().BackgroundColor(),
 		buttonColor:         theme.DarkTheme().ButtonColor(),
 		disabledButtonColor: theme.DarkTheme().DisabledButtonColor(),

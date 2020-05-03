@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/canvas"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
@@ -192,6 +193,16 @@ func reflesh() {
 	fyne.CurrentApp().Settings().SetTheme(currentThemeSetting)
 }
 
+func export(base fyne.Window) {
+	dst, err := generate(currentThemeSetting)
+	if err != nil {
+		dialog.ShowError(err, base)
+		return
+	}
+	msg := fmt.Sprintf("Success to export file: %s", dst)
+	dialog.ShowInformation("Success", msg, base)
+}
+
 func run(args []string) error {
 	a := app.New()
 	ts := newThemeSetting()
@@ -201,14 +212,21 @@ func run(args []string) error {
 	confs := configures(ts)
 	w.SetContent(
 		fyne.NewContainerWithLayout(
-			layout.NewHBoxLayout(),
+			layout.NewVBoxLayout(),
 			fyne.NewContainerWithLayout(
-				layout.NewGridLayoutWithColumns(3),
-				confs[:len(confs)/2]...,
+				layout.NewHBoxLayout(),
+				fyne.NewContainerWithLayout(
+					layout.NewGridLayoutWithColumns(3),
+					confs[:len(confs)/2]...,
+				),
+				fyne.NewContainerWithLayout(
+					layout.NewGridLayoutWithColumns(3),
+					confs[len(confs)/2:]...,
+				),
 			),
 			fyne.NewContainerWithLayout(
-				layout.NewGridLayoutWithColumns(3),
-				confs[len(confs)/2:]...,
+				layout.NewCenterLayout(),
+				widget.NewButton("Export theme", func() { export(w) }),
 			),
 		),
 	)
