@@ -117,11 +117,11 @@ func configures(ts *themeSetting) []fyne.CanvasObject {
 	cs = append(cs, colorConfigure("Scroll bar color", empty(), ts.ScrollBarColor(), ts.SetScrollBarColor)...)
 	cs = append(cs, colorConfigure("Shadow color", empty(), ts.ShadowColor(), ts.SetShadowColor)...)
 	cs = append(cs, intConfigure("Text size", empty(), ts.TextSize(), ts.SetTextSize)...)
-	cs = append(cs, readonlyStringConfigure("Text font", empty(), ts.TextFont().Name())...)
-	cs = append(cs, readonlyStringConfigure("Text bold font", empty(), ts.TextBoldFont().Name())...)
-	cs = append(cs, readonlyStringConfigure("Text italic font", empty(), ts.TextItalicFont().Name())...)
-	cs = append(cs, readonlyStringConfigure("Text bold italic font", empty(), ts.TextBoldItalicFont().Name())...)
-	cs = append(cs, readonlyStringConfigure("Text monospace font", empty(), ts.TextMonospaceFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text font", dummyText(), ts.TextFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text bold font", dummyBoldText(), ts.TextBoldFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text italic font", dummyItalicText(), ts.TextItalicFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text bold italic font", dummyBoldItalicText(), ts.TextBoldItalicFont().Name())...)
+	cs = append(cs, readonlyStringConfigure("Text monospace font", dummyMonospaceText(), ts.TextMonospaceFont().Name())...)
 	cs = append(cs, intConfigure("Padding", empty(), ts.Padding(), ts.SetPadding)...)
 	cs = append(cs, intConfigure("Icon inline size", empty(), ts.IconInlineSize(), ts.SetIconInlineSize)...)
 	cs = append(cs, intConfigure("Scroll bar size", empty(), ts.ScrollBarSize(), ts.SetScrollBarSize)...)
@@ -142,7 +142,28 @@ func dummyButton(enable bool) fyne.CanvasObject {
 }
 
 func dummyText() fyne.CanvasObject {
+	return dummyStyledText(false, false, false)
+}
+
+func dummyBoldText() fyne.CanvasObject {
+	return dummyStyledText(true, false, false)
+}
+
+func dummyItalicText() fyne.CanvasObject {
+	return dummyStyledText(false, true, false)
+}
+
+func dummyBoldItalicText() fyne.CanvasObject {
+	return dummyStyledText(true, true, false)
+}
+
+func dummyMonospaceText() fyne.CanvasObject {
+	return dummyStyledText(false, false, true)
+}
+
+func dummyStyledText(bold, italic, monospace bool) fyne.CanvasObject {
 	text := widget.NewLabel("Text sample")
+	text.TextStyle = fyne.TextStyle{Bold: bold, Italic: italic, Monospace: monospace}
 	return text
 }
 
