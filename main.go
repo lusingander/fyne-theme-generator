@@ -100,7 +100,7 @@ func readonlyStringConfigure(label string, sampleWidget fyne.CanvasObject, defau
 	}
 }
 
-func configures1(ts *themeSetting) []fyne.CanvasObject {
+func configures(ts *themeSetting) []fyne.CanvasObject {
 	cs := make([]fyne.CanvasObject, 0)
 	cs = append(cs, colorConfigure("Background color", empty(), ts.BackgroundColor(), ts.SetBackgroundColor)...)
 	cs = append(cs, colorConfigure("Button color", dummyButton(true), ts.ButtonColor(), ts.SetButtonColor)...)
@@ -114,11 +114,6 @@ func configures1(ts *themeSetting) []fyne.CanvasObject {
 	cs = append(cs, colorConfigure("Primary color", empty(), ts.PrimaryColor(), ts.SetPrimaryColor)...)
 	cs = append(cs, colorConfigure("Hover color", empty(), ts.HoverColor(), ts.SetHoverColor)...)
 	cs = append(cs, colorConfigure("Focus color", empty(), ts.FocusColor(), ts.SetFocusColor)...)
-	return cs
-}
-
-func configures2(ts *themeSetting) []fyne.CanvasObject {
-	cs := make([]fyne.CanvasObject, 0)
 	cs = append(cs, colorConfigure("Scroll bar color", empty(), ts.ScrollBarColor(), ts.SetScrollBarColor)...)
 	cs = append(cs, colorConfigure("Shadow color", empty(), ts.ShadowColor(), ts.SetShadowColor)...)
 	cs = append(cs, intConfigure("Text size", empty(), ts.TextSize(), ts.SetTextSize)...)
@@ -182,16 +177,17 @@ func run(args []string) error {
 	currentThemeSetting = ts
 	a.Settings().SetTheme(ts)
 	w := a.NewWindow("Fyne theme generator")
+	confs := configures(ts)
 	w.SetContent(
 		fyne.NewContainerWithLayout(
 			layout.NewHBoxLayout(),
 			fyne.NewContainerWithLayout(
 				layout.NewGridLayoutWithColumns(3),
-				configures1(ts)...,
+				confs[:len(confs)/2]...,
 			),
 			fyne.NewContainerWithLayout(
 				layout.NewGridLayoutWithColumns(3),
-				configures2(ts)...,
+				confs[len(confs)/2:]...,
 			),
 		),
 	)
