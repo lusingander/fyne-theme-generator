@@ -25,8 +25,8 @@ type colorSelector struct {
 }
 
 func newColorSelector(defaultColor color.Color, update func(color.Color), sampleWidget fyne.CanvasObject) *colorSelector {
-	entry := &widget.Entry{PlaceHolder: "#000000"}
-	rect := &canvas.Rectangle{FillColor: color.RGBA{0, 0, 0, 255}}
+	entry := &widget.Entry{}
+	rect := &canvas.Rectangle{FillColor: color.RGBA{0, 0, 0, 0}}
 	rect.SetMinSize(fyne.NewSize(20, 20))
 	selector := &colorSelector{
 		entry:        entry,
@@ -37,14 +37,14 @@ func newColorSelector(defaultColor color.Color, update func(color.Color), sample
 	}
 	selector.setColor(defaultColor)
 	entry.OnChanged = func(s string) {
-		var r, g, b uint8
+		var r, g, b, a uint8
 		l := len(s)
-		if l > 7 {
+		if l > 9 {
 			selector.setColor(selector.tmp)
-		} else if _, err := fmt.Sscanf(s, "#%02x%02x%02x", &r, &g, &b); l == 7 && err == nil {
-			selector.setColor(color.RGBA{r, g, b, 255})
-		} else if _, err := fmt.Sscanf(s, "#%1x%1x%1x", &r, &g, &b); l == 4 && err == nil {
-			selector.setColor(color.RGBA{r * 17, g * 17, b * 17, 255})
+		} else if _, err := fmt.Sscanf(s, "#%02x%02x%02x%02x", &r, &g, &b, &a); l == 9 && err == nil {
+			selector.setColor(color.RGBA{r, g, b, a})
+		} else if _, err := fmt.Sscanf(s, "#%1x%1x%1x%1x", &r, &g, &b, &a); l == 5 && err == nil {
+			selector.setColor(color.RGBA{r * 17, g * 17, b * 17, a * 17})
 		}
 	}
 	return selector
@@ -60,7 +60,7 @@ func (c *colorSelector) setColor(clr color.Color) {
 
 func hexColorString(c color.Color) string {
 	rgba := color.RGBAModel.Convert(c).(color.RGBA)
-	return fmt.Sprintf("#%.2X%.2X%.2X", rgba.R, rgba.G, rgba.B)
+	return fmt.Sprintf("#%.2X%.2X%.2X%.2X", rgba.R, rgba.G, rgba.B, rgba.A)
 }
 
 func colorConfigure(label string, sampleWidget fyne.CanvasObject, defaultColor color.Color, update func(color.Color)) []fyne.CanvasObject {
