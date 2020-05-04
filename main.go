@@ -36,7 +36,8 @@ func newColorSelector(defaultColor color.Color, update func(color.Color), sample
 		sampleWidget: sampleWidget,
 	}
 	selector.setColor(defaultColor)
-	rect.SetOnChange(selector.setColor)
+	// colorpicker doesn't currently consider alpha...
+	rect.SetOnChange(selector.setColorKeepAlpha)
 	entry.OnChanged = func(s string) {
 		var r, g, b, a uint8
 		l := len(s)
@@ -49,6 +50,12 @@ func newColorSelector(defaultColor color.Color, update func(color.Color), sample
 		}
 	}
 	return selector
+}
+
+func (c *colorSelector) setColorKeepAlpha(clr color.Color) {
+	r, g, b, _ := clr.RGBA()
+	_, _, _, a := c.tmp.RGBA()
+	c.setColor(color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
 }
 
 func (c *colorSelector) setColor(clr color.Color) {
