@@ -53,6 +53,7 @@ func newColorSelector(defaultColor color.Color, update func(color.Color), sample
 
 func (c *colorSelector) setColor(clr color.Color) {
 	c.entry.SetText(hexColorString(clr))
+	c.rect.SetColor(clr)
 	c.update(clr)
 	reflesh()
 }
