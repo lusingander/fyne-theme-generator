@@ -36,10 +36,9 @@ func run(args []string) error {
 	ts := newThemeSetting()
 	currentThemeSetting = ts
 	a.Settings().SetTheme(ts)
-	w := a.NewWindow("Fyne theme generator")
-	mainWindow = w
+	mainWindow = a.NewWindow("Fyne theme generator")
 	confs := configures(ts)
-	w.SetContent(
+	mainWindow.SetContent(
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
 			fyne.NewContainerWithLayout(
@@ -59,7 +58,7 @@ func run(args []string) error {
 			),
 		),
 	)
-	w.ShowAndRun()
+	mainWindow.ShowAndRun()
 	return nil
 }
 
