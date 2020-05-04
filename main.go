@@ -10,16 +10,16 @@ import (
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
-	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
+	"github.com/lusingander/colorpicker"
 )
 
 type colorSelector struct {
 	entry        *widget.Entry
-	rect         *canvas.Rectangle
+	rect         colorpicker.PickerOpenWidget
 	tmp          color.Color
 	update       func(color.Color)
 	sampleWidget fyne.CanvasObject
@@ -27,8 +27,7 @@ type colorSelector struct {
 
 func newColorSelector(defaultColor color.Color, update func(color.Color), sampleWidget fyne.CanvasObject) *colorSelector {
 	entry := &widget.Entry{}
-	rect := &canvas.Rectangle{FillColor: color.RGBA{0, 0, 0, 0}}
-	rect.SetMinSize(fyne.NewSize(20, 20))
+	rect := colorpicker.NewColorSelectModalRect(mainWindow, fyne.NewSize(20, 20), defaultColor)
 	selector := &colorSelector{
 		entry:        entry,
 		rect:         rect,
@@ -37,6 +36,7 @@ func newColorSelector(defaultColor color.Color, update func(color.Color), sample
 		sampleWidget: sampleWidget,
 	}
 	selector.setColor(defaultColor)
+	rect.SetOnChange(selector.setColor)
 	entry.OnChanged = func(s string) {
 		var r, g, b, a uint8
 		l := len(s)
@@ -52,9 +52,7 @@ func newColorSelector(defaultColor color.Color, update func(color.Color), sample
 }
 
 func (c *colorSelector) setColor(clr color.Color) {
-	c.tmp = c.rect.FillColor
 	c.entry.SetText(hexColorString(clr))
-	c.rect.FillColor = clr
 	c.update(clr)
 	reflesh()
 }
@@ -187,6 +185,7 @@ func dummyEntry() fyne.CanvasObject {
 
 var (
 	currentThemeSetting *themeSetting
+	mainWindow          fyne.Window
 )
 
 func reflesh() {
@@ -209,6 +208,7 @@ func run(args []string) error {
 	currentThemeSetting = ts
 	a.Settings().SetTheme(ts)
 	w := a.NewWindow("Fyne theme generator")
+	mainWindow = w
 	confs := configures(ts)
 	w.SetContent(
 		fyne.NewContainerWithLayout(
