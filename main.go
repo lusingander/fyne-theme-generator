@@ -21,14 +21,14 @@ func reflesh() {
 	fyne.CurrentApp().Settings().SetTheme(currentThemeSetting)
 }
 
-func export(base fyne.Window) {
+func export() {
 	dst, err := generate(currentThemeSetting)
 	if err != nil {
-		dialog.ShowError(err, base)
+		dialog.ShowError(err, mainWindow)
 		return
 	}
 	msg := fmt.Sprintf("Success to export file: %s", dst)
-	dialog.ShowInformation("Success", msg, base)
+	dialog.ShowInformation("Success", msg, mainWindow)
 }
 
 func run(args []string) error {
@@ -55,7 +55,7 @@ func run(args []string) error {
 			),
 			fyne.NewContainerWithLayout(
 				layout.NewCenterLayout(),
-				widget.NewButton("Export theme", func() { export(w) }),
+				widget.NewButton("Export theme", export),
 			),
 		),
 	)
