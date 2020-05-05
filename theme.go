@@ -7,6 +7,11 @@ import (
 	"fyne.io/fyne/theme"
 )
 
+const (
+	defaultPackageName     = "main"
+	defaultThemeStructName = "myTheme"
+)
+
 type themeSetting struct {
 	packageName     string
 	themeStructName string
@@ -41,8 +46,8 @@ type themeSetting struct {
 
 func newThemeSetting() *themeSetting {
 	return &themeSetting{
-		packageName:         "main",
-		themeStructName:     "myTheme",
+		packageName:         defaultPackageName,
+		themeStructName:     defaultThemeStructName,
 		backgroundColor:     theme.DarkTheme().BackgroundColor(),
 		buttonColor:         theme.DarkTheme().ButtonColor(),
 		disabledButtonColor: theme.DarkTheme().DisabledButtonColor(),
