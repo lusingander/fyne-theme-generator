@@ -70,6 +70,8 @@ func newThemeSetting() *themeSetting {
 	}
 }
 
+func (s *themeSetting) PackageName() string               { return s.packageName }
+func (s *themeSetting) ThemeStructName() string           { return s.themeStructName }
 func (s *themeSetting) BackgroundColor() color.Color      { return s.backgroundColor }
 func (s *themeSetting) ButtonColor() color.Color          { return s.buttonColor }
 func (s *themeSetting) DisabledButtonColor() color.Color  { return s.disabledButtonColor }
@@ -95,6 +97,8 @@ func (s *themeSetting) IconInlineSize() int               { return s.iconInlineS
 func (s *themeSetting) ScrollBarSize() int                { return s.scrollBarSize }
 func (s *themeSetting) ScrollBarSmallSize() int           { return s.scrollBarSmallSize }
 
+func (s *themeSetting) SetPackageName(name string)               { s.packageName = name }
+func (s *themeSetting) SetThemeStructName(name string)           { s.themeStructName = name }
 func (s *themeSetting) SetBackgroundColor(c color.Color)         { s.backgroundColor = c }
 func (s *themeSetting) SetButtonColor(c color.Color)             { s.buttonColor = c }
 func (s *themeSetting) SetDisabledButtonColor(c color.Color)     { s.disabledButtonColor = c }

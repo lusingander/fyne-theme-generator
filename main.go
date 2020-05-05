@@ -31,13 +31,35 @@ func export() {
 	dialog.ShowInformation("Success", msg, mainWindow)
 }
 
+func toolbar() fyne.CanvasObject {
+	packageNameLabel := widget.NewLabel("Package name:")
+	packageNameEntry := widget.NewEntry()
+	packageNameEntry.SetText(currentThemeSetting.PackageName())
+	packageNameEntry.OnChanged = func(s string) { currentThemeSetting.SetPackageName(s) }
+	themeStructNameLabel := widget.NewLabel("Theme struct name:")
+	themeStructNameEntry := widget.NewEntry()
+	themeStructNameEntry.SetText(currentThemeSetting.ThemeStructName())
+	themeStructNameEntry.OnChanged = func(s string) { currentThemeSetting.SetThemeStructName(s) }
+
+	exportButton := widget.NewButton("Export theme", export)
+
+	return fyne.NewContainerWithLayout(
+		layout.NewHBoxLayout(),
+		layout.NewSpacer(),
+		packageNameLabel,
+		packageNameEntry,
+		themeStructNameLabel,
+		themeStructNameEntry,
+		exportButton,
+	)
+}
+
 func run(args []string) error {
 	a := app.New()
-	ts := newThemeSetting()
-	currentThemeSetting = ts
-	a.Settings().SetTheme(ts)
+	currentThemeSetting = newThemeSetting()
+	a.Settings().SetTheme(currentThemeSetting)
 	mainWindow = a.NewWindow("Fyne theme generator")
-	confs := configures(ts)
+	confs := configures(currentThemeSetting)
 	mainWindow.SetContent(
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
@@ -52,10 +74,7 @@ func run(args []string) error {
 					confs[len(confs)/2:]...,
 				),
 			),
-			fyne.NewContainerWithLayout(
-				layout.NewCenterLayout(),
-				widget.NewButton("Export theme", export),
-			),
+			toolbar(),
 		),
 	)
 	mainWindow.ShowAndRun()
