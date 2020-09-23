@@ -62,19 +62,23 @@ func run(args []string) error {
 	confs := configures(currentThemeSetting)
 	mainWindow.SetContent(
 		fyne.NewContainerWithLayout(
-			layout.NewVBoxLayout(),
+			layout.NewHBoxLayout(),
 			fyne.NewContainerWithLayout(
-				layout.NewHBoxLayout(),
+				layout.NewVBoxLayout(),
 				fyne.NewContainerWithLayout(
-					layout.NewGridLayoutWithColumns(2),
-					confs[:len(confs)/2]...,
+					layout.NewHBoxLayout(),
+					fyne.NewContainerWithLayout(
+						layout.NewGridLayoutWithColumns(2),
+						confs[:len(confs)/2]...,
+					),
+					fyne.NewContainerWithLayout(
+						layout.NewGridLayoutWithColumns(2),
+						confs[len(confs)/2:]...,
+					),
 				),
-				fyne.NewContainerWithLayout(
-					layout.NewGridLayoutWithColumns(2),
-					confs[len(confs)/2:]...,
-				),
+				toolbar(),
 			),
-			toolbar(),
+			widgets(),
 		),
 	)
 	mainWindow.ShowAndRun()
