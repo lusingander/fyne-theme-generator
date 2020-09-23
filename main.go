@@ -66,11 +66,11 @@ func run(args []string) error {
 			fyne.NewContainerWithLayout(
 				layout.NewHBoxLayout(),
 				fyne.NewContainerWithLayout(
-					layout.NewGridLayoutWithColumns(3),
+					layout.NewGridLayoutWithColumns(2),
 					confs[:len(confs)/2]...,
 				),
 				fyne.NewContainerWithLayout(
-					layout.NewGridLayoutWithColumns(3),
+					layout.NewGridLayoutWithColumns(2),
 					confs[len(confs)/2:]...,
 				),
 			),
