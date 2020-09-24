@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/url"
+	"time"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
@@ -19,6 +20,8 @@ func widgets() fyne.CanvasObject {
 		layout.NewVBoxLayout(),
 		labels(),
 		buttons(),
+		inputs(),
+		progresses(),
 	)
 }
 
@@ -66,6 +69,66 @@ func buttons() fyne.CanvasObject {
 			confirm,
 			file,
 			disabled,
+		),
+	)
+}
+
+func inputs() fyne.CanvasObject {
+	entry := widget.NewEntry()
+	entry.SetPlaceHolder("Entry")
+	disabledEntry := widget.NewEntry()
+	disabledEntry.Disable()
+	disabledEntry.SetText("Entry (disabled)")
+	selects := widget.NewSelect([]string{"Foo", "Bar", "Baz"}, func(string) {})
+	check := widget.NewCheck("Check", func(bool) {})
+	disabledCheck := widget.NewCheck("Check (disabled)", func(bool) {})
+	disabledCheck.Disable()
+	radio := widget.NewRadio([]string{"Radio"}, func(string) {})
+	disabledRadio := widget.NewRadio([]string{"Radio (disabled)"}, func(string) {})
+	disabledRadio.Disable()
+	slider := widget.NewSlider(0, 100)
+	return widget.NewGroup(
+		"Inputs",
+		fyne.NewContainerWithLayout(
+			layout.NewVBoxLayout(),
+			fyne.NewContainerWithLayout(
+				layout.NewGridLayout(2),
+				entry,
+				disabledEntry,
+			),
+			selects,
+			fyne.NewContainerWithLayout(
+				layout.NewGridLayout(2),
+				check,
+				disabledCheck,
+				radio,
+				disabledRadio,
+			),
+			slider,
+		),
+	)
+}
+
+func progresses() fyne.CanvasObject {
+	progress := widget.NewProgressBar()
+	go func() {
+		var v float64
+		for {
+			v += 0.01
+			progress.SetValue(v)
+			time.Sleep(time.Millisecond * 100)
+			if v >= 1 {
+				v = 0
+			}
+		}
+	}()
+	progressInf := widget.NewProgressBarInfinite()
+	return widget.NewGroup(
+		"Progresses",
+		fyne.NewContainerWithLayout(
+			layout.NewVBoxLayout(),
+			progress,
+			progressInf,
 		),
 	)
 }
