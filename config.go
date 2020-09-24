@@ -38,8 +38,6 @@ func newColorSelector(defaultColor color.Color, update func(color.Color)) *color
 			selector.setColor(selector.tmp)
 		} else if _, err := fmt.Sscanf(s, "#%02x%02x%02x%02x", &r, &g, &b, &a); l == 9 && err == nil {
 			selector.setColor(color.RGBA{r, g, b, a})
-		} else if _, err := fmt.Sscanf(s, "#%1x%1x%1x%1x", &r, &g, &b, &a); l == 5 && err == nil {
-			selector.setColor(color.RGBA{r * 17, g * 17, b * 17, a * 17})
 		}
 	}
 	return selector
