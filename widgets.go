@@ -31,10 +31,13 @@ func labels() fyne.CanvasObject {
 	title.TextStyle.Bold = true
 	parsed, _ := url.Parse(repositoryURL)
 	link := widget.NewHyperlink("repository", parsed)
-	link.Alignment = fyne.TextAlignCenter
 	description := widget.NewLabel("WYSIWYG theme editor for Fyne")
-	description.Alignment = fyne.TextAlignCenter
 	description.TextStyle.Italic = true
+	boldItalic := widget.NewLabel("Bold Italic text")
+	boldItalic.TextStyle.Bold = true
+	boldItalic.TextStyle.Italic = true
+	monospace := widget.NewLabel("Monospace text")
+	monospace.TextStyle.Monospace = true
 	return widget.NewGroup(
 		"Labels",
 		fyne.NewContainerWithLayout(
@@ -44,6 +47,11 @@ func labels() fyne.CanvasObject {
 				layout.NewHBoxLayout(),
 				description,
 				link,
+			),
+			fyne.NewContainerWithLayout(
+				layout.NewHBoxLayout(),
+				boldItalic,
+				monospace,
 			),
 		),
 	)
