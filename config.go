@@ -3,12 +3,10 @@ package main
 import (
 	"fmt"
 	"image/color"
-	"net/url"
 	"strconv"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/layout"
-	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
 	"github.com/lusingander/colorpicker"
 )
@@ -127,59 +125,4 @@ func configures(ts *themeSetting) []fyne.CanvasObject {
 	cs = append(cs, intConfigure("Scroll bar size", ts.ScrollBarSize(), ts.SetScrollBarSize)...)
 	cs = append(cs, intConfigure("Scroll bar small size", ts.ScrollBarSmallSize(), ts.SetScrollBarSmallSize)...)
 	return cs
-}
-
-func empty() fyne.CanvasObject {
-	return layout.NewSpacer()
-}
-
-func dummyButton(enable bool) fyne.CanvasObject {
-	button := widget.NewButton("Button sample", func() {})
-	if !enable {
-		button.Disable()
-	}
-	return button
-}
-
-func dummyText() fyne.CanvasObject {
-	return dummyStyledText(false, false, false)
-}
-
-func dummyBoldText() fyne.CanvasObject {
-	return dummyStyledText(true, false, false)
-}
-
-func dummyItalicText() fyne.CanvasObject {
-	return dummyStyledText(false, true, false)
-}
-
-func dummyBoldItalicText() fyne.CanvasObject {
-	return dummyStyledText(true, true, false)
-}
-
-func dummyMonospaceText() fyne.CanvasObject {
-	return dummyStyledText(false, false, true)
-}
-
-func dummyStyledText(bold, italic, monospace bool) fyne.CanvasObject {
-	text := widget.NewLabel("Text sample")
-	text.TextStyle = fyne.TextStyle{Bold: bold, Italic: italic, Monospace: monospace}
-	return text
-}
-
-func dummyIcon() fyne.CanvasObject {
-	icon := widget.NewIcon(theme.DocumentSaveIcon())
-	return icon
-}
-
-func dummyHyperlink() fyne.CanvasObject {
-	url, _ := url.Parse("https://fyne.io/")
-	hyperlink := widget.NewHyperlink("Hyperlink sample", url)
-	return hyperlink
-}
-
-func dummyEntry() fyne.CanvasObject {
-	entry := widget.NewEntry()
-	entry.SetPlaceHolder("Entry sample")
-	return entry
 }
