@@ -126,3 +126,18 @@ func configures(ts *themeSetting) []fyne.CanvasObject {
 	cs = append(cs, intConfigure("Scroll bar small size", ts.ScrollBarSmallSize(), ts.SetScrollBarSmallSize)...)
 	return cs
 }
+
+func config() fyne.CanvasObject {
+	confs := configures(currentThemeSetting)
+	return fyne.NewContainerWithLayout(
+		layout.NewHBoxLayout(),
+		fyne.NewContainerWithLayout(
+			layout.NewGridLayoutWithColumns(2),
+			confs[:len(confs)/2]...,
+		),
+		fyne.NewContainerWithLayout(
+			layout.NewGridLayoutWithColumns(2),
+			confs[len(confs)/2:]...,
+		),
+	)
+}
