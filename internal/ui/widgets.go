@@ -1,4 +1,4 @@
-package main
+package ui
 
 import (
 	"net/url"
@@ -15,17 +15,17 @@ const (
 	repositoryURL = "https://github.com/lusingander/fyne-theme-generator"
 )
 
-func widgets() fyne.CanvasObject {
+func (u *ui) widgets() fyne.CanvasObject {
 	return fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
-		labels(),
-		buttons(),
-		inputs(),
-		progresses(),
+		u.labels(),
+		u.buttons(),
+		u.inputs(),
+		u.progresses(),
 	)
 }
 
-func labels() fyne.CanvasObject {
+func (u *ui) labels() fyne.CanvasObject {
 	title := widget.NewLabel("Fyne Theme Generator")
 	title.Alignment = fyne.TextAlignCenter
 	title.TextStyle.Bold = true
@@ -57,15 +57,15 @@ func labels() fyne.CanvasObject {
 	)
 }
 
-func buttons() fyne.CanvasObject {
+func (u *ui) buttons() fyne.CanvasObject {
 	info := widget.NewButton("Info", func() {
-		dialog.NewInformation("Info", "information dialog...", mainWindow)
+		dialog.NewInformation("Info", "information dialog...", u.window)
 	})
 	confirm := widget.NewButton("Confirm", func() {
-		dialog.NewConfirm("Confirm", "confirm dialog...", func(bool) {}, mainWindow)
+		dialog.NewConfirm("Confirm", "confirm dialog...", func(bool) {}, u.window)
 	})
 	file := widget.NewButtonWithIcon("File Dialog", theme.FolderOpenIcon(), func() {
-		dialog.ShowFileOpen(func(fyne.URIReadCloser, error) {}, mainWindow)
+		dialog.ShowFileOpen(func(fyne.URIReadCloser, error) {}, u.window)
 	})
 	disabled := widget.NewButtonWithIcon("Disabled", theme.CancelIcon(), func() {})
 	disabled.Disable()
@@ -81,7 +81,7 @@ func buttons() fyne.CanvasObject {
 	)
 }
 
-func inputs() fyne.CanvasObject {
+func (u *ui) inputs() fyne.CanvasObject {
 	entry := widget.NewEntry()
 	entry.SetPlaceHolder("Entry")
 	disabledEntry := widget.NewEntry()
@@ -117,7 +117,7 @@ func inputs() fyne.CanvasObject {
 	)
 }
 
-func progresses() fyne.CanvasObject {
+func (u *ui) progresses() fyne.CanvasObject {
 	progress := widget.NewProgressBar()
 	go func() {
 		var v float64

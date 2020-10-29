@@ -1,4 +1,4 @@
-package main
+package theme
 
 import (
 	"bytes"
@@ -11,7 +11,21 @@ const (
 	dstFile = "./theme_gen.go"
 )
 
-func buildSource(t *themeSetting) ([]byte, error) {
+func Generate(t *Setting) (string, error) {
+	source, err := buildSource(t)
+	if err != nil {
+		return "", err
+	}
+	dst, err := os.Create(dstFile)
+	if err != nil {
+		return "", err
+	}
+	defer dst.Close()
+	dst.Write(source)
+	return dstFile, nil
+}
+
+func buildSource(t *Setting) ([]byte, error) {
 	buf := newBufferWrapper()
 
 	buf.writeln("package %s", t.packageName)
@@ -53,20 +67,6 @@ func buildSource(t *themeSetting) ([]byte, error) {
 	buf.writeln("func (%s) ScrollBarSmallSize() int           { return %#v }", t.themeStructName, t.scrollBarSmallSize)
 
 	return format.Source(buf.Bytes())
-}
-
-func generate(t *themeSetting) (string, error) {
-	source, err := buildSource(t)
-	if err != nil {
-		return "", err
-	}
-	dst, err := os.Create(dstFile)
-	if err != nil {
-		return "", err
-	}
-	defer dst.Close()
-	dst.Write(source)
-	return dstFile, nil
 }
 
 type bufferWrapper struct {
