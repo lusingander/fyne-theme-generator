@@ -22,6 +22,7 @@ type colorSelector struct {
 func newColorSelector(defaultColor color.Color, update func(color.Color)) *colorSelector {
 	entry := &widget.Entry{}
 	rect := colorpicker.NewColorSelectModalRect(mainWindow, fyne.NewSize(20, 20), defaultColor)
+	rect.SetPickerStyle(colorpicker.StyleCircle)
 	selector := &colorSelector{
 		entry:  entry,
 		rect:   rect,
