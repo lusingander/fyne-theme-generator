@@ -31,7 +31,7 @@ func (u *ui) Build() {
 				u.config(),
 				u.toolbar(),
 			),
-			u.widgets(),
+			u.newWidgetsPanel().panel,
 		),
 	)
 }

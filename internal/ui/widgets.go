@@ -15,17 +15,30 @@ const (
 	repositoryURL = "https://github.com/lusingander/fyne-theme-generator"
 )
 
-func (u *ui) widgets() fyne.CanvasObject {
-	return fyne.NewContainerWithLayout(
+type widgetsPanel struct {
+	panel  fyne.CanvasObject
+	parent fyne.Window
+}
+
+func (u *ui) newWidgetsPanel() *widgetsPanel {
+	p := &widgetsPanel{
+		parent: u.window,
+	}
+	p.build()
+	return p
+}
+
+func (p *widgetsPanel) build() {
+	p.panel = fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
-		u.labels(),
-		u.buttons(),
-		u.inputs(),
-		u.progresses(),
+		p.labels(),
+		p.buttons(),
+		p.inputs(),
+		p.progresses(),
 	)
 }
 
-func (u *ui) labels() fyne.CanvasObject {
+func (*widgetsPanel) labels() fyne.CanvasObject {
 	title := widget.NewLabel("Fyne Theme Generator")
 	title.Alignment = fyne.TextAlignCenter
 	title.TextStyle.Bold = true
@@ -57,15 +70,15 @@ func (u *ui) labels() fyne.CanvasObject {
 	)
 }
 
-func (u *ui) buttons() fyne.CanvasObject {
+func (p *widgetsPanel) buttons() fyne.CanvasObject {
 	info := widget.NewButton("Info", func() {
-		dialog.NewInformation("Info", "information dialog...", u.window)
+		dialog.NewInformation("Info", "information dialog...", p.parent)
 	})
 	confirm := widget.NewButton("Confirm", func() {
-		dialog.NewConfirm("Confirm", "confirm dialog...", func(bool) {}, u.window)
+		dialog.NewConfirm("Confirm", "confirm dialog...", func(bool) {}, p.parent)
 	})
 	file := widget.NewButtonWithIcon("File Dialog", theme.FolderOpenIcon(), func() {
-		dialog.ShowFileOpen(func(fyne.URIReadCloser, error) {}, u.window)
+		dialog.ShowFileOpen(func(fyne.URIReadCloser, error) {}, p.parent)
 	})
 	disabled := widget.NewButtonWithIcon("Disabled", theme.CancelIcon(), func() {})
 	disabled.Disable()
@@ -81,7 +94,7 @@ func (u *ui) buttons() fyne.CanvasObject {
 	)
 }
 
-func (u *ui) inputs() fyne.CanvasObject {
+func (*widgetsPanel) inputs() fyne.CanvasObject {
 	entry := widget.NewEntry()
 	entry.SetPlaceHolder("Entry")
 	disabledEntry := widget.NewEntry()
@@ -117,7 +130,7 @@ func (u *ui) inputs() fyne.CanvasObject {
 	)
 }
 
-func (u *ui) progresses() fyne.CanvasObject {
+func (*widgetsPanel) progresses() fyne.CanvasObject {
 	progress := widget.NewProgressBar()
 	go func() {
 		var v float64
