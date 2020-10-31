@@ -28,7 +28,7 @@ func (u *ui) Build() {
 			layout.NewHBoxLayout(),
 			fyne.NewContainerWithLayout(
 				layout.NewVBoxLayout(),
-				u.config(),
+				u.newConfigPanel().panel,
 				u.newToolbarPanel().panel,
 			),
 			u.newWidgetsPanel().panel,
