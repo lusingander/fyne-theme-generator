@@ -15,9 +15,17 @@ You can change each parameter that can be set as Fyne theme.
 
 <img src="./resource/screenshot.png" width=700>
 
-> Note: Some of the parameters are not yet configurable or visible on the screen.
+> Note: Font settings are not yet configurable on the screen.
 
-And you can export the theme file you set.
+### Default themes
+
+You can choose a new theme from Fine v1.4 or later, or an earlier theme and apply and customize it.
+
+<img src="./resource/image.gif" width=500>
+
+### Export
+
+You can export the theme file you set.
 
 The following is an example of the output `theme_gen.go`.
 
