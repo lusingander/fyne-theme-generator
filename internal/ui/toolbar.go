@@ -10,30 +10,35 @@ import (
 	"github.com/lusingander/fyne-theme-generator/internal/theme"
 )
 
-func (u *ui) export() {
-	dst, err := theme.Generate(u.current)
-	if err != nil {
-		dialog.ShowError(err, u.window)
-		return
-	}
-	msg := fmt.Sprintf("Success to export file: %s", dst)
-	dialog.ShowInformation("Success", msg, u.window)
+type toolbarPanel struct {
+	panel   fyne.CanvasObject
+	parent  fyne.Window
+	current *theme.Setting
 }
 
-func (u *ui) toolbar() fyne.CanvasObject {
+func (u *ui) newToolbarPanel() *toolbarPanel {
+	p := &toolbarPanel{
+		parent:  u.window,
+		current: u.current,
+	}
+	p.build()
+	return p
+}
+
+func (p *toolbarPanel) build() {
 	packageNameLabel := widget.NewLabel("Package name:")
 	packageNameEntry := widget.NewEntry()
-	packageNameEntry.SetText(u.current.PackageName())
-	packageNameEntry.OnChanged = func(s string) { u.current.SetPackageName(s) }
+	packageNameEntry.SetText(p.current.PackageName())
+	packageNameEntry.OnChanged = func(s string) { p.current.SetPackageName(s) }
 
 	themeStructNameLabel := widget.NewLabel("Theme struct name:")
 	themeStructNameEntry := widget.NewEntry()
-	themeStructNameEntry.SetText(u.current.ThemeStructName())
-	themeStructNameEntry.OnChanged = func(s string) { u.current.SetThemeStructName(s) }
+	themeStructNameEntry.SetText(p.current.ThemeStructName())
+	themeStructNameEntry.OnChanged = func(s string) { p.current.SetThemeStructName(s) }
 
-	exportButton := widget.NewButton("Export theme", u.export)
+	exportButton := widget.NewButton("Export theme", p.export)
 
-	return fyne.NewContainerWithLayout(
+	p.panel = fyne.NewContainerWithLayout(
 		layout.NewHBoxLayout(),
 		layout.NewSpacer(),
 		packageNameLabel,
@@ -43,3 +48,37 @@ func (u *ui) toolbar() fyne.CanvasObject {
 		exportButton,
 	)
 }
+
+func (p *toolbarPanel) export() {
+	dst, err := theme.Generate(p.current)
+	if err != nil {
+		dialog.ShowError(err, p.parent)
+		return
+	}
+	msg := fmt.Sprintf("Success to export file: %s", dst)
+	dialog.ShowInformation("Success", msg, p.parent)
+}
+
+// func (u *ui) toolbar() fyne.CanvasObject {
+// 	packageNameLabel := widget.NewLabel("Package name:")
+// 	packageNameEntry := widget.NewEntry()
+// 	packageNameEntry.SetText(u.current.PackageName())
+// 	packageNameEntry.OnChanged = func(s string) { u.current.SetPackageName(s) }
+
+// 	themeStructNameLabel := widget.NewLabel("Theme struct name:")
+// 	themeStructNameEntry := widget.NewEntry()
+// 	themeStructNameEntry.SetText(u.current.ThemeStructName())
+// 	themeStructNameEntry.OnChanged = func(s string) { u.current.SetThemeStructName(s) }
+
+// 	exportButton := widget.NewButton("Export theme", u.export)
+
+// 	return fyne.NewContainerWithLayout(
+// 		layout.NewHBoxLayout(),
+// 		layout.NewSpacer(),
+// 		packageNameLabel,
+// 		packageNameEntry,
+// 		themeStructNameLabel,
+// 		themeStructNameEntry,
+// 		exportButton,
+// 	)
+// }

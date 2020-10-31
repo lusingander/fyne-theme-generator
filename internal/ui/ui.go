@@ -29,7 +29,7 @@ func (u *ui) Build() {
 			fyne.NewContainerWithLayout(
 				layout.NewVBoxLayout(),
 				u.config(),
-				u.toolbar(),
+				u.newToolbarPanel().panel,
 			),
 			u.newWidgetsPanel().panel,
 		),
