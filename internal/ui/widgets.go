@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/data/validation"
 	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
@@ -100,6 +101,11 @@ func (*widgetsPanel) inputs() fyne.CanvasObject {
 	disabledEntry := widget.NewEntry()
 	disabledEntry.Disable()
 	disabledEntry.SetText("Entry (disabled)")
+	validateEntry := widget.NewEntry()
+	validateEntry.SetPlaceHolder("Must contain a number")
+	validateEntry.SetText("abc")
+	validateEntry.Validator = validation.NewRegexp(`\d`, "Must contain a number")
+
 	selects := widget.NewSelect([]string{"Foo", "Bar", "Baz"}, func(string) {})
 	check := widget.NewCheck("Check", func(bool) {})
 	disabledCheck := widget.NewCheck("Check (disabled)", func(bool) {})
@@ -117,6 +123,7 @@ func (*widgetsPanel) inputs() fyne.CanvasObject {
 				entry,
 				disabledEntry,
 			),
+			validateEntry,
 			selects,
 			fyne.NewContainerWithLayout(
 				layout.NewGridLayout(2),
