@@ -21,7 +21,7 @@ You can change each parameter that can be set as Fyne theme.
 
 You can choose a new theme from Fine v1.4 or later, or an earlier theme and apply and customize it.
 
-<img src="./resource/image.gif" width=500>
+<img src="./resource/apply_theme.gif" width=500>
 
 ### Export
 
