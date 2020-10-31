@@ -21,11 +21,17 @@ func (u *ui) newToolbarPanel() *toolbarPanel {
 		parent:  u.window,
 		current: u.current,
 	}
-	p.build()
+	p.build(u.applyTheme)
 	return p
 }
 
-func (p *toolbarPanel) build() {
+func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme)) {
+	themeSelect := widget.NewSelect(theme.EmbeddedThemes, func(string) {})
+	themeSelect.SetSelectedIndex(0)
+	themeApplyButton := widget.NewButton("Apply", func() {
+		applyThemeFunc(theme.GetEmbeddedThemeFrom(themeSelect.Selected))
+	})
+
 	packageNameLabel := widget.NewLabel("Package name:")
 	packageNameEntry := widget.NewEntry()
 	packageNameEntry.SetText(p.current.PackageName())
@@ -39,13 +45,22 @@ func (p *toolbarPanel) build() {
 	exportButton := widget.NewButton("Export theme", p.export)
 
 	p.panel = fyne.NewContainerWithLayout(
-		layout.NewHBoxLayout(),
-		layout.NewSpacer(),
-		packageNameLabel,
-		packageNameEntry,
-		themeStructNameLabel,
-		themeStructNameEntry,
-		exportButton,
+		layout.NewVBoxLayout(),
+		fyne.NewContainerWithLayout(
+			layout.NewHBoxLayout(),
+			layout.NewSpacer(),
+			themeSelect,
+			themeApplyButton,
+		),
+		fyne.NewContainerWithLayout(
+			layout.NewHBoxLayout(),
+			layout.NewSpacer(),
+			packageNameLabel,
+			packageNameEntry,
+			themeStructNameLabel,
+			themeStructNameEntry,
+			exportButton,
+		),
 	)
 }
 

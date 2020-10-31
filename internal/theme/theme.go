@@ -12,6 +12,34 @@ const (
 	defaultThemeStructName = "myTheme"
 )
 
+const (
+	fyneDarkThemeName     = "Fyne Dark"
+	fyneLightThemeName    = "Fyne Light"
+	fyneOldDarkThemeName  = "Fyne Dark (old)"
+	fyneOldLightThemeName = "Fyne Light (old)"
+)
+
+var EmbeddedThemes = []string{
+	fyneDarkThemeName,
+	fyneLightThemeName,
+	fyneOldDarkThemeName,
+	fyneOldLightThemeName,
+}
+
+func GetEmbeddedThemeFrom(name string) fyne.Theme {
+	switch name {
+	case fyneDarkThemeName:
+		return theme.DarkTheme()
+	case fyneLightThemeName:
+		return theme.LightTheme()
+	case fyneOldDarkThemeName:
+		return &fyneOldDarkTheme{}
+	case fyneOldLightThemeName:
+		return &fyneOldLightTheme{}
+	}
+	return theme.DarkTheme()
+}
+
 type Setting struct {
 	packageName     string
 	themeStructName string
@@ -128,3 +156,226 @@ func (s *Setting) SetPadding(pad int)                       { s.padding = pad }
 func (s *Setting) SetIconInlineSize(size int)               { s.iconInlineSize = size }
 func (s *Setting) SetScrollBarSize(size int)                { s.scrollBarSize = size }
 func (s *Setting) SetScrollBarSmallSize(size int)           { s.scrollBarSmallSize = size }
+
+func (s *Setting) UpdateTheme(t fyne.Theme) {
+	s.SetBackgroundColor(t.BackgroundColor())
+	s.SetButtonColor(t.ButtonColor())
+	s.SetDisabledButtonColor(t.DisabledButtonColor())
+	s.SetTextColor(t.TextColor())
+	s.SetDisabledTextColor(t.DisabledTextColor())
+	s.SetIconColor(t.IconColor())
+	s.SetDisabledIconColor(t.DisabledIconColor())
+	s.SetHyperlinkColor(t.HyperlinkColor())
+	s.SetPlaceHolderColor(t.PlaceHolderColor())
+	s.SetPrimaryColor(t.PrimaryColor())
+	s.SetHoverColor(t.HoverColor())
+	s.SetFocusColor(t.FocusColor())
+	s.SetScrollBarColor(t.ScrollBarColor())
+	s.SetShadowColor(t.ShadowColor())
+	s.SetTextSize(t.TextSize())
+	s.SetTextFont(t.TextFont())
+	s.SetTextBoldFont(t.TextBoldFont())
+	s.SetTextItalicFont(t.TextItalicFont())
+	s.SetTextBoldItalicFont(t.TextBoldItalicFont())
+	s.SetTextMonospaceFont(t.TextMonospaceFont())
+	s.SetPadding(t.Padding())
+	s.SetIconInlineSize(t.IconInlineSize())
+	s.SetScrollBarSize(t.ScrollBarSize())
+	s.SetScrollBarSmallSize(t.ScrollBarSmallSize())
+}
+
+type fyneOldDarkTheme struct{}
+
+func (fyneOldDarkTheme) BackgroundColor() color.Color {
+	return color.NRGBA{0x42, 0x42, 0x42, 0xff}
+}
+
+func (fyneOldDarkTheme) ButtonColor() color.Color {
+	return color.NRGBA{0x21, 0x21, 0x21, 0xff}
+}
+
+func (fyneOldDarkTheme) DisabledButtonColor() color.Color {
+	return color.NRGBA{0x31, 0x31, 0x31, 0xff}
+}
+
+func (fyneOldDarkTheme) IconColor() color.Color {
+	return color.NRGBA{0xff, 0xff, 0xff, 0xff}
+}
+
+func (fyneOldDarkTheme) DisabledIconColor() color.Color {
+	return color.NRGBA{0x60, 0x60, 0x60, 0xff}
+}
+
+func (fyneOldDarkTheme) HyperlinkColor() color.Color {
+	return color.NRGBA{0x99, 0x99, 0xff, 0xff}
+}
+
+func (fyneOldDarkTheme) TextColor() color.Color {
+	return color.NRGBA{0xff, 0xff, 0xff, 0xff}
+}
+
+func (fyneOldDarkTheme) DisabledTextColor() color.Color {
+	return color.NRGBA{0x60, 0x60, 0x60, 0xff}
+}
+
+func (fyneOldDarkTheme) HoverColor() color.Color {
+	return color.NRGBA{0x31, 0x31, 0x31, 0xff}
+}
+
+func (fyneOldDarkTheme) PlaceHolderColor() color.Color {
+	return color.NRGBA{0xb2, 0xb2, 0xb2, 0xff}
+}
+
+func (fyneOldDarkTheme) PrimaryColor() color.Color {
+	return color.NRGBA{0x1a, 0x23, 0x7e, 0xff}
+}
+
+func (fyneOldDarkTheme) FocusColor() color.Color {
+	return color.NRGBA{0x1a, 0x23, 0x7e, 0xff}
+}
+
+func (fyneOldDarkTheme) ScrollBarColor() color.Color {
+	return color.NRGBA{0x0, 0x0, 0x0, 0x99}
+}
+
+func (fyneOldDarkTheme) ShadowColor() color.Color {
+	return color.NRGBA{0x0, 0x0, 0x0, 0x66}
+}
+
+func (fyneOldDarkTheme) TextSize() int {
+	return 14
+}
+
+func (fyneOldDarkTheme) TextFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextFont()
+}
+
+func (fyneOldDarkTheme) TextBoldFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextBoldFont()
+}
+
+func (fyneOldDarkTheme) TextItalicFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextItalicFont()
+}
+
+func (fyneOldDarkTheme) TextBoldItalicFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextBoldItalicFont()
+}
+
+func (fyneOldDarkTheme) TextMonospaceFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextMonospaceFont()
+}
+
+func (fyneOldDarkTheme) Padding() int {
+	return 4
+}
+
+func (fyneOldDarkTheme) IconInlineSize() int {
+	return 20
+}
+
+func (fyneOldDarkTheme) ScrollBarSize() int {
+	return 16
+}
+
+func (fyneOldDarkTheme) ScrollBarSmallSize() int {
+	return 3
+}
+
+type fyneOldLightTheme struct{}
+
+func (fyneOldLightTheme) BackgroundColor() color.Color {
+	return color.NRGBA{0xf5, 0xf5, 0xf5, 0xff}
+}
+
+func (fyneOldLightTheme) ButtonColor() color.Color {
+	return color.NRGBA{0xd9, 0xd9, 0xd9, 0xff}
+}
+
+func (fyneOldLightTheme) DisabledButtonColor() color.Color {
+	return color.NRGBA{0xe7, 0xe7, 0xe7, 0xff}
+}
+
+func (fyneOldLightTheme) IconColor() color.Color {
+	return color.NRGBA{0x21, 0x21, 0x21, 0xff}
+}
+
+func (fyneOldLightTheme) DisabledIconColor() color.Color {
+	return color.NRGBA{0x80, 0x80, 0x80, 0xff}
+}
+
+func (fyneOldLightTheme) HyperlinkColor() color.Color {
+	return color.NRGBA{0x0, 0x0, 0xd9, 0xff}
+}
+
+func (fyneOldLightTheme) TextColor() color.Color {
+	return color.NRGBA{0x21, 0x21, 0x21, 0xff}
+}
+
+func (fyneOldLightTheme) DisabledTextColor() color.Color {
+	return color.NRGBA{0x80, 0x80, 0x80, 0xff}
+}
+
+func (fyneOldLightTheme) HoverColor() color.Color {
+	return color.NRGBA{0xe7, 0xe7, 0xe7, 0xff}
+}
+
+func (fyneOldLightTheme) PlaceHolderColor() color.Color {
+	return color.NRGBA{0x88, 0x88, 0x88, 0xff}
+}
+
+func (fyneOldLightTheme) PrimaryColor() color.Color {
+	return color.NRGBA{0x9f, 0xa8, 0xda, 0xff}
+}
+
+func (fyneOldLightTheme) FocusColor() color.Color {
+	return color.NRGBA{0x9f, 0xa8, 0xda, 0xff}
+}
+
+func (fyneOldLightTheme) ScrollBarColor() color.Color {
+	return color.NRGBA{0x0, 0x0, 0x0, 0x99}
+}
+
+func (fyneOldLightTheme) ShadowColor() color.Color {
+	return color.NRGBA{0x0, 0x0, 0x0, 0x33}
+}
+
+func (fyneOldLightTheme) TextSize() int {
+	return 14
+}
+
+func (fyneOldLightTheme) TextFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextFont()
+}
+
+func (fyneOldLightTheme) TextBoldFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextBoldFont()
+}
+
+func (fyneOldLightTheme) TextItalicFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextItalicFont()
+}
+
+func (fyneOldLightTheme) TextBoldItalicFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextBoldItalicFont()
+}
+
+func (fyneOldLightTheme) TextMonospaceFont() fyne.Resource {
+	return fyne.CurrentApp().Settings().Theme().TextMonospaceFont()
+}
+
+func (fyneOldLightTheme) Padding() int {
+	return 4
+}
+
+func (fyneOldLightTheme) IconInlineSize() int {
+	return 20
+}
+
+func (fyneOldLightTheme) ScrollBarSize() int {
+	return 16
+}
+
+func (fyneOldLightTheme) ScrollBarSmallSize() int {
+	return 3
+}

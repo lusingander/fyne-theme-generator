@@ -9,6 +9,10 @@ import (
 type ui struct {
 	window  fyne.Window
 	current *theme.Setting
+
+	*configPanel
+	*toolbarPanel
+	*widgetsPanel
 }
 
 func New(w fyne.Window) *ui {
@@ -23,15 +27,24 @@ func (u *ui) Reflesh() {
 }
 
 func (u *ui) Build() {
+	u.configPanel = u.newConfigPanel()
+	u.toolbarPanel = u.newToolbarPanel()
+	u.widgetsPanel = u.newWidgetsPanel()
 	u.window.SetContent(
 		fyne.NewContainerWithLayout(
 			layout.NewHBoxLayout(),
 			fyne.NewContainerWithLayout(
 				layout.NewVBoxLayout(),
-				u.newConfigPanel().panel,
-				u.newToolbarPanel().panel,
+				u.configPanel.panel,
+				u.toolbarPanel.panel,
 			),
-			u.newWidgetsPanel().panel,
+			u.widgetsPanel.panel,
 		),
 	)
+}
+
+func (u *ui) applyTheme(t fyne.Theme) {
+	u.current.UpdateTheme(t)
+	u.configPanel.applyCurrentTheme()
+	u.Reflesh()
 }

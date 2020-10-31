@@ -56,6 +56,32 @@ func (u *ui) newConfigPanel() *configPanel {
 	return p
 }
 
+func (p *configPanel) applyCurrentTheme() {
+	p.buttonColorSelector.setColor(p.current.ButtonColor())
+	p.disabledButtonColorSelector.setColor(p.current.DisabledButtonColor())
+	p.textColorSelector.setColor(p.current.TextColor())
+	p.disabledTextColorSelector.setColor(p.current.DisabledTextColor())
+	p.iconColorSelector.setColor(p.current.IconColor())
+	p.disabledIconColorSelector.setColor(p.current.DisabledIconColor())
+	p.hyperlinkColorSelector.setColor(p.current.HyperlinkColor())
+	p.placeHolderColorSelector.setColor(p.current.PlaceHolderColor())
+	p.primaryColorSelector.setColor(p.current.PrimaryColor())
+	p.hoverColorSelector.setColor(p.current.HoverColor())
+	p.focusColorSelector.setColor(p.current.FocusColor())
+	p.scrollBarColorSelector.setColor(p.current.ScrollBarColor())
+	p.shadowColorSelector.setColor(p.current.ShadowColor())
+	p.textSizeSelector.setValue(p.current.TextSize())
+	p.textFontSelector.setValue(p.current.TextFont().Name())
+	p.textBoldFontSelector.setValue(p.current.TextBoldFont().Name())
+	p.textItalicFontSelector.setValue(p.current.TextItalicFont().Name())
+	p.textBoldItalicFontSelector.setValue(p.current.TextBoldItalicFont().Name())
+	p.textMonospaceFontSelector.setValue(p.current.TextMonospaceFont().Name())
+	p.paddingSelector.setValue(p.current.Padding())
+	p.iconInlineSizeSelector.setValue(p.current.IconInlineSize())
+	p.scrollBarSizeSelector.setValue(p.current.ScrollBarSize())
+	p.scrollBarSmallSizeSelector.setValue(p.current.ScrollBarSmallSize())
+}
+
 func (p *configPanel) build() {
 	confs := p.configures(p.current)
 	p.panel = fyne.NewContainerWithLayout(
@@ -170,16 +196,16 @@ func (p *configPanel) newColorSelector(defaultColor color.Color, update func(col
 		update:  update,
 		reflesh: p.reflesh,
 	}
-	selector.setColor(defaultColor)
+	selector.setColorAndReflesh(defaultColor)
 	// colorpicker doesn't currently consider alpha...
 	rect.SetOnChange(selector.setColorKeepAlpha)
 	entry.OnChanged = func(s string) {
 		var r, g, b, a uint8
 		l := len(s)
 		if l > 9 {
-			selector.setColor(selector.tmp)
+			selector.setColorAndReflesh(selector.tmp)
 		} else if _, err := fmt.Sscanf(s, "#%02x%02x%02x%02x", &r, &g, &b, &a); l == 9 && err == nil {
-			selector.setColor(color.RGBA{r, g, b, a})
+			selector.setColorAndReflesh(color.RGBA{r, g, b, a})
 		}
 	}
 	return selector
@@ -188,15 +214,19 @@ func (p *configPanel) newColorSelector(defaultColor color.Color, update func(col
 func (c *colorSelector) setColorKeepAlpha(clr color.Color) {
 	r, g, b, _ := clr.RGBA()
 	_, _, _, a := c.tmp.RGBA()
-	c.setColor(color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
+	c.setColorAndReflesh(color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
+}
+
+func (c *colorSelector) setColorAndReflesh(clr color.Color) {
+	c.setColor(clr)
+	c.update(clr)
+	c.reflesh()
 }
 
 func (c *colorSelector) setColor(clr color.Color) {
 	c.tmp = clr
 	c.entry.SetText(hexColorString(clr))
 	c.rect.SetColor(clr)
-	c.update(clr)
-	c.reflesh()
 }
 
 func hexColorString(c color.Color) string {
@@ -210,16 +240,21 @@ type intSelector struct {
 
 func (p *configPanel) newIntSelector(defaultValue int, update func(int)) *intSelector {
 	entry := &widget.Entry{}
-	entry.SetText(strconv.Itoa(defaultValue))
+	selector := &intSelector{
+		entry: entry,
+	}
+	selector.setValue(defaultValue)
 	entry.OnChanged = func(s string) {
 		if n, err := strconv.Atoi(s); err == nil {
 			update(n)
 			p.reflesh()
 		}
 	}
-	return &intSelector{
-		entry: entry,
-	}
+	return selector
+}
+
+func (s *intSelector) setValue(v int) {
+	s.entry.SetText(strconv.Itoa(v))
 }
 
 type readonlyStringSelector struct {
@@ -231,4 +266,8 @@ func (p *configPanel) newReadonlyStringSelector(defaultValue string) *readonlySt
 	return &readonlyStringSelector{
 		str: str,
 	}
+}
+
+func (s *readonlyStringSelector) setValue(v string) {
+	s.str.SetText(v)
 }
