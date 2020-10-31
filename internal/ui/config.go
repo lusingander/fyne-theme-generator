@@ -57,6 +57,7 @@ func (u *ui) newConfigPanel() *configPanel {
 }
 
 func (p *configPanel) applyCurrentTheme() {
+	p.backgroundColorSelector.setColor(p.current.BackgroundColor())
 	p.buttonColorSelector.setColor(p.current.ButtonColor())
 	p.disabledButtonColorSelector.setColor(p.current.DisabledButtonColor())
 	p.textColorSelector.setColor(p.current.TextColor())
