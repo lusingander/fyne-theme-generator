@@ -15,18 +15,23 @@ type ui struct {
 	*widgetsPanel
 }
 
-func New(w fyne.Window) *ui {
+// Start app
+func Start(w fyne.Window) {
+	new(w).build()
+}
+
+func new(w fyne.Window) *ui {
 	return &ui{
 		window:  w,
 		current: theme.NewSetting(),
 	}
 }
 
-func (u *ui) Reflesh() {
+func (u *ui) reflesh() {
 	fyne.CurrentApp().Settings().SetTheme(u.current)
 }
 
-func (u *ui) Build() {
+func (u *ui) build() {
 	u.configPanel = u.newConfigPanel()
 	u.toolbarPanel = u.newToolbarPanel()
 	u.widgetsPanel = u.newWidgetsPanel()
@@ -46,5 +51,5 @@ func (u *ui) Build() {
 func (u *ui) applyTheme(t fyne.Theme) {
 	u.current.UpdateTheme(t)
 	u.configPanel.applyCurrentTheme()
-	u.Reflesh()
+	u.reflesh()
 }

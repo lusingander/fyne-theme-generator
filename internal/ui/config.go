@@ -50,7 +50,7 @@ func (u *ui) newConfigPanel() *configPanel {
 	p := &configPanel{
 		parent:  u.window,
 		current: u.current,
-		reflesh: u.Reflesh,
+		reflesh: u.reflesh,
 	}
 	p.build()
 	return p
