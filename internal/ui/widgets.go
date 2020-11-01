@@ -19,19 +19,35 @@ const (
 type widgetsPanel struct {
 	panel  fyne.CanvasObject
 	parent fyne.Window
+
+	connected bool
+	toolbar   *widget.Toolbar
 }
 
 func (u *ui) newWidgetsPanel() *widgetsPanel {
 	p := &widgetsPanel{
-		parent: u.window,
+		parent:    u.window,
+		connected: true,
 	}
-	p.build()
+	p.build(u.connectWidgetPanel, u.disconnectWidgetPanel)
 	return p
 }
 
-func (p *widgetsPanel) build() {
+func (p *widgetsPanel) connect(onClickDisconnect func()) {
+	p.connected = true
+	p.resetToolbar(nil, onClickDisconnect)
+}
+
+func (p *widgetsPanel) disconnect(onClickConnect func()) {
+	p.connected = false
+	p.resetToolbar(onClickConnect, nil)
+}
+
+func (p *widgetsPanel) build(onClickConnect, onClickDisconnect func()) {
+	p.resetToolbar(onClickConnect, onClickDisconnect)
 	p.panel = fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
+		p.toolbar,
 		p.labels(),
 		p.buttons(),
 		p.inputs(),
@@ -39,14 +55,49 @@ func (p *widgetsPanel) build() {
 	)
 }
 
+func (p *widgetsPanel) resetToolbar(onClickConnect, onClickDisconnect func()) {
+	var action widget.ToolbarItem
+	if p.connected {
+		action = widget.NewToolbarAction(theme.ContentAddIcon(), onClickDisconnect)
+	} else {
+		action = widget.NewToolbarAction(theme.ContentClearIcon(), onClickConnect)
+	}
+	if p.toolbar == nil {
+		p.toolbar = widget.NewToolbar(
+			widget.NewToolbarSpacer(),
+			newToolbarLabel("Fyne Theme Generator"),
+			widget.NewToolbarSpacer(),
+			action,
+		)
+	} else {
+		// HACK: toolbarRenderer#resetObjects is not called when len(Items) is not changed...
+		p.toolbar.Items = p.toolbar.Items[:len(p.toolbar.Items)-1]
+		p.toolbar.Refresh()
+		p.toolbar.Append(action)
+	}
+}
+
+type toolbarLabel struct {
+	fyne.CanvasObject
+}
+
+func newToolbarLabel(label string) *toolbarLabel {
+	align := fyne.TextAlignCenter
+	style := fyne.TextStyle{Bold: true}
+	return &toolbarLabel{widget.NewLabelWithStyle(label, align, style)}
+}
+
+func (l *toolbarLabel) ToolbarObject() fyne.CanvasObject {
+	return l.CanvasObject
+}
+
 func (*widgetsPanel) labels() fyne.CanvasObject {
-	title := widget.NewLabel("Fyne Theme Generator")
-	title.Alignment = fyne.TextAlignCenter
-	title.TextStyle.Bold = true
 	parsed, _ := url.Parse(repositoryURL)
 	link := widget.NewHyperlink("repository", parsed)
 	description := widget.NewLabel("WYSIWYG theme editor for Fyne")
 	description.TextStyle.Italic = true
+	bold := widget.NewLabel("Bold text")
+	bold.TextStyle.Bold = true
 	boldItalic := widget.NewLabel("Bold Italic text")
 	boldItalic.TextStyle.Bold = true
 	boldItalic.TextStyle.Italic = true
@@ -56,7 +107,6 @@ func (*widgetsPanel) labels() fyne.CanvasObject {
 		"Labels",
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
-			title,
 			fyne.NewContainerWithLayout(
 				layout.NewHBoxLayout(),
 				description,
@@ -64,6 +114,7 @@ func (*widgetsPanel) labels() fyne.CanvasObject {
 			),
 			fyne.NewContainerWithLayout(
 				layout.NewHBoxLayout(),
+				bold,
 				boldItalic,
 				monospace,
 			),
