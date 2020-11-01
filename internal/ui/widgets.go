@@ -29,22 +29,22 @@ func (u *ui) newWidgetsPanel() *widgetsPanel {
 		parent:    u.window,
 		connected: true,
 	}
-	p.build(u.connectWidgetPanel, u.disconnectWidgetPanel)
+	p.build(u.disconnectWidgetPanel)
 	return p
 }
 
 func (p *widgetsPanel) connect(onClickDisconnect func()) {
 	p.connected = true
-	p.resetToolbar(nil, onClickDisconnect)
+	p.resetToolbar(theme.ContentAddIcon(), onClickDisconnect)
 }
 
 func (p *widgetsPanel) disconnect(onClickConnect func()) {
 	p.connected = false
-	p.resetToolbar(onClickConnect, nil)
+	p.resetToolbar(theme.ContentClearIcon(), onClickConnect)
 }
 
-func (p *widgetsPanel) build(onClickConnect, onClickDisconnect func()) {
-	p.resetToolbar(onClickConnect, onClickDisconnect)
+func (p *widgetsPanel) build(onClickDisconnect func()) {
+	p.connect(onClickDisconnect)
 	p.panel = fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
 		p.toolbar,
@@ -55,13 +55,8 @@ func (p *widgetsPanel) build(onClickConnect, onClickDisconnect func()) {
 	)
 }
 
-func (p *widgetsPanel) resetToolbar(onClickConnect, onClickDisconnect func()) {
-	var action widget.ToolbarItem
-	if p.connected {
-		action = widget.NewToolbarAction(theme.ContentAddIcon(), onClickDisconnect)
-	} else {
-		action = widget.NewToolbarAction(theme.ContentClearIcon(), onClickConnect)
-	}
+func (p *widgetsPanel) resetToolbar(icon fyne.Resource, onClick func()) {
+	action := widget.NewToolbarAction(icon, onClick)
 	if p.toolbar == nil {
 		p.toolbar = widget.NewToolbar(
 			widget.NewToolbarSpacer(),
