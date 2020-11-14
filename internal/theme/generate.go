@@ -19,6 +19,9 @@ func Generate(t *Setting) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
+	if !t.needToGenerateFont() {
+		return themeFile, "", nil
+	}
 	fontFile, err := generateFont(t)
 	if err != nil {
 		return "", "", err
@@ -33,7 +36,7 @@ func generateSource(source []byte, dstFile string) (string, error) {
 	}
 	defer dst.Close()
 	dst.Write(source)
-	return dstFontFile, nil
+	return dstFile, nil
 }
 
 func generateTheme(t *Setting) (string, error) {
@@ -76,12 +79,31 @@ func buildThemeSource(t *Setting) ([]byte, error) {
 	buf.writeln("func (%s) ScrollBarColor() color.Color       { return %#v }", t.themeStructName, t.scrollBarColor)
 	buf.writeln("func (%s) ShadowColor() color.Color          { return %#v }", t.themeStructName, t.shadowColor)
 	buf.writeln("func (%s) TextSize() int                     { return %#v }", t.themeStructName, t.textSize)
-	// Note: Currently, font cannot be changed from this application.
-	buf.writeln("func (%s) TextFont() fyne.Resource           { return theme.LightTheme().TextFont() }", t.themeStructName)
-	buf.writeln("func (%s) TextBoldFont() fyne.Resource       { return theme.LightTheme().TextBoldFont() }", t.themeStructName)
-	buf.writeln("func (%s) TextItalicFont() fyne.Resource     { return theme.LightTheme().TextItalicFont() }", t.themeStructName)
-	buf.writeln("func (%s) TextBoldItalicFont() fyne.Resource { return theme.LightTheme().TextBoldItalicFont() }", t.themeStructName)
-	buf.writeln("func (%s) TextMonospaceFont() fyne.Resource  { return theme.LightTheme().TextMonospaceFont() }", t.themeStructName)
+	if t.isSetTextFont() {
+		buf.writeln("func (%s) TextFont() fyne.Resource           { return %s }", t.themeStructName, sanitiseName(t.textFont.Name()))
+	} else {
+		buf.writeln("func (%s) TextFont() fyne.Resource           { return theme.LightTheme().TextFont() }", t.themeStructName)
+	}
+	if t.isSetTextBoldFont() {
+		buf.writeln("func (%s) TextBoldFont() fyne.Resource       { return %s }", t.themeStructName, sanitiseName(t.textBoldFont.Name()))
+	} else {
+		buf.writeln("func (%s) TextBoldFont() fyne.Resource       { return theme.LightTheme().TextBoldFont() }", t.themeStructName)
+	}
+	if t.isSetTextItalicFont() {
+		buf.writeln("func (%s) TextItalicFont() fyne.Resource     { return %s }", t.themeStructName, sanitiseName(t.textItalicFont.Name()))
+	} else {
+		buf.writeln("func (%s) TextItalicFont() fyne.Resource     { return theme.LightTheme().TextItalicFont() }", t.themeStructName)
+	}
+	if t.isSetTextBoldItalicFont() {
+		buf.writeln("func (%s) TextBoldItalicFont() fyne.Resource { return %s }", t.themeStructName, sanitiseName(t.textBoldItalicFont.Name()))
+	} else {
+		buf.writeln("func (%s) TextBoldItalicFont() fyne.Resource { return theme.LightTheme().TextBoldItalicFont() }", t.themeStructName)
+	}
+	if t.isSetTextMonospaceFont() {
+		buf.writeln("func (%s) TextMonospaceFont() fyne.Resource  { return %s }", t.themeStructName, sanitiseName(t.textMonospaceFont.Name()))
+	} else {
+		buf.writeln("func (%s) TextMonospaceFont() fyne.Resource  { return theme.LightTheme().TextMonospaceFont() }", t.themeStructName)
+	}
 	buf.writeln("func (%s) Padding() int                      { return %#v }", t.themeStructName, t.padding)
 	buf.writeln("func (%s) IconInlineSize() int               { return %#v }", t.themeStructName, t.iconInlineSize)
 	buf.writeln("func (%s) ScrollBarSize() int                { return %#v }", t.themeStructName, t.scrollBarSize)
@@ -107,16 +129,26 @@ func buildFontSource(t *Setting) ([]byte, error) {
 	buf.writeln("")
 	buf.writeln("import \"fyne.io/fyne\"")
 	buf.writeln("")
-	buf.writeln("var %s = %#v\n", sanitiseName(t.textFont.Name()), t.textFont)
-	buf.writeln("")
-	buf.writeln("var %s = %#v\n", sanitiseName(t.textBoldFont.Name()), t.textBoldFont)
-	buf.writeln("")
-	buf.writeln("var %s = %#v\n", sanitiseName(t.textItalicFont.Name()), t.textItalicFont)
-	buf.writeln("")
-	buf.writeln("var %s = %#v\n", sanitiseName(t.textBoldItalicFont.Name()), t.textBoldItalicFont)
-	buf.writeln("")
-	buf.writeln("var %s = %#v\n", sanitiseName(t.textMonospaceFont.Name()), t.textMonospaceFont)
-	buf.writeln("")
+	if t.isSetTextFont() {
+		buf.writeln("var %s = %#v\n", sanitiseName(t.textFont.Name()), t.textFont)
+		buf.writeln("")
+	}
+	if t.isSetTextBoldFont() {
+		buf.writeln("var %s = %#v\n", sanitiseName(t.textBoldFont.Name()), t.textBoldFont)
+		buf.writeln("")
+	}
+	if t.isSetTextItalicFont() {
+		buf.writeln("var %s = %#v\n", sanitiseName(t.textItalicFont.Name()), t.textItalicFont)
+		buf.writeln("")
+	}
+	if t.isSetTextBoldItalicFont() {
+		buf.writeln("var %s = %#v\n", sanitiseName(t.textBoldItalicFont.Name()), t.textBoldItalicFont)
+		buf.writeln("")
+	}
+	if t.isSetTextMonospaceFont() {
+		buf.writeln("var %s = %#v\n", sanitiseName(t.textMonospaceFont.Name()), t.textMonospaceFont)
+		buf.writeln("")
+	}
 
 	return buf.Bytes(), nil
 }

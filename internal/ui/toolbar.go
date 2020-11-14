@@ -70,6 +70,9 @@ func (p *toolbarPanel) export() {
 		dialog.ShowError(err, p.parent)
 		return
 	}
-	msg := fmt.Sprintf("Success to export file: %s, %s", dstTheme, dstFont)
+	msg := fmt.Sprintf("Success to export file: %s", dstTheme)
+	if dstFont != "" {
+		msg += fmt.Sprintf(", %s", dstFont)
+	}
 	dialog.ShowInformation("Success", msg, p.parent)
 }

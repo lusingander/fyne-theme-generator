@@ -70,36 +70,44 @@ type Setting struct {
 	iconInlineSize     int
 	scrollBarSize      int
 	scrollBarSmallSize int
+
+	userSettingDefaultTheme fyne.Theme
 }
 
 func NewSetting() *Setting {
+	userSettingDefaultTheme := fyne.CurrentApp().Settings().Theme()
+	if userSettingDefaultTheme == nil {
+		userSettingDefaultTheme = theme.DarkTheme()
+	}
+
 	return &Setting{
-		packageName:         defaultPackageName,
-		themeStructName:     defaultThemeStructName,
-		backgroundColor:     theme.DarkTheme().BackgroundColor(),
-		buttonColor:         theme.DarkTheme().ButtonColor(),
-		disabledButtonColor: theme.DarkTheme().DisabledButtonColor(),
-		textColor:           theme.DarkTheme().TextColor(),
-		disabledTextColor:   theme.DarkTheme().DisabledTextColor(),
-		iconColor:           theme.DarkTheme().IconColor(),
-		disabledIconColor:   theme.DarkTheme().DisabledIconColor(),
-		hyperlinkColor:      theme.DarkTheme().HyperlinkColor(),
-		placeHolderColor:    theme.DarkTheme().PlaceHolderColor(),
-		primaryColor:        theme.DarkTheme().PrimaryColor(),
-		hoverColor:          theme.DarkTheme().HoverColor(),
-		focusColor:          theme.DarkTheme().FocusColor(),
-		scrollBarColor:      theme.DarkTheme().ScrollBarColor(),
-		shadowColor:         theme.DarkTheme().ShadowColor(),
-		textSize:            theme.DarkTheme().TextSize(),
-		textFont:            theme.DarkTheme().TextFont(),
-		textBoldFont:        theme.DarkTheme().TextBoldFont(),
-		textItalicFont:      theme.DarkTheme().TextItalicFont(),
-		textBoldItalicFont:  theme.DarkTheme().TextBoldItalicFont(),
-		textMonospaceFont:   theme.DarkTheme().TextMonospaceFont(),
-		padding:             theme.DarkTheme().Padding(),
-		iconInlineSize:      theme.DarkTheme().IconInlineSize(),
-		scrollBarSize:       theme.DarkTheme().ScrollBarSize(),
-		scrollBarSmallSize:  theme.DarkTheme().ScrollBarSmallSize(),
+		packageName:             defaultPackageName,
+		themeStructName:         defaultThemeStructName,
+		backgroundColor:         userSettingDefaultTheme.BackgroundColor(),
+		buttonColor:             userSettingDefaultTheme.ButtonColor(),
+		disabledButtonColor:     userSettingDefaultTheme.DisabledButtonColor(),
+		textColor:               userSettingDefaultTheme.TextColor(),
+		disabledTextColor:       userSettingDefaultTheme.DisabledTextColor(),
+		iconColor:               userSettingDefaultTheme.IconColor(),
+		disabledIconColor:       userSettingDefaultTheme.DisabledIconColor(),
+		hyperlinkColor:          userSettingDefaultTheme.HyperlinkColor(),
+		placeHolderColor:        userSettingDefaultTheme.PlaceHolderColor(),
+		primaryColor:            userSettingDefaultTheme.PrimaryColor(),
+		hoverColor:              userSettingDefaultTheme.HoverColor(),
+		focusColor:              userSettingDefaultTheme.FocusColor(),
+		scrollBarColor:          userSettingDefaultTheme.ScrollBarColor(),
+		shadowColor:             userSettingDefaultTheme.ShadowColor(),
+		textSize:                userSettingDefaultTheme.TextSize(),
+		textFont:                userSettingDefaultTheme.TextFont(),
+		textBoldFont:            userSettingDefaultTheme.TextBoldFont(),
+		textItalicFont:          userSettingDefaultTheme.TextItalicFont(),
+		textBoldItalicFont:      userSettingDefaultTheme.TextBoldItalicFont(),
+		textMonospaceFont:       userSettingDefaultTheme.TextMonospaceFont(),
+		padding:                 userSettingDefaultTheme.Padding(),
+		iconInlineSize:          userSettingDefaultTheme.IconInlineSize(),
+		scrollBarSize:           userSettingDefaultTheme.ScrollBarSize(),
+		scrollBarSmallSize:      userSettingDefaultTheme.ScrollBarSmallSize(),
+		userSettingDefaultTheme: userSettingDefaultTheme,
 	}
 }
 
@@ -182,6 +190,34 @@ func (s *Setting) UpdateTheme(t fyne.Theme) {
 	s.SetIconInlineSize(t.IconInlineSize())
 	s.SetScrollBarSize(t.ScrollBarSize())
 	s.SetScrollBarSmallSize(t.ScrollBarSmallSize())
+}
+
+func (s *Setting) isSetTextFont() bool {
+	return s.userSettingDefaultTheme.TextFont().Name() != s.textFont.Name()
+}
+
+func (s *Setting) isSetTextBoldFont() bool {
+	return s.userSettingDefaultTheme.TextBoldFont().Name() != s.textBoldFont.Name()
+}
+
+func (s *Setting) isSetTextItalicFont() bool {
+	return s.userSettingDefaultTheme.TextItalicFont().Name() != s.textItalicFont.Name()
+}
+
+func (s *Setting) isSetTextBoldItalicFont() bool {
+	return s.userSettingDefaultTheme.TextBoldItalicFont().Name() != s.textBoldItalicFont.Name()
+}
+
+func (s *Setting) isSetTextMonospaceFont() bool {
+	return s.userSettingDefaultTheme.TextMonospaceFont().Name() != s.textMonospaceFont.Name()
+}
+
+func (s *Setting) needToGenerateFont() bool {
+	return s.isSetTextFont() ||
+		s.isSetTextBoldFont() ||
+		s.isSetTextItalicFont() ||
+		s.isSetTextBoldItalicFont() ||
+		s.isSetTextMonospaceFont()
 }
 
 type fyneOldDarkTheme struct{}
