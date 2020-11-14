@@ -3,7 +3,7 @@ fyne-theme-generator
 
 WYSIWYG theme editor for [Fyne](https://fyne.io/)
 
-<img src="./resource/image.gif" width=500>
+<img src="./resource/main.gif" width=700>
 
 ## Installation
 
@@ -15,17 +15,23 @@ You can change each parameter that can be set as Fyne theme.
 
 <img src="./resource/screenshot.png" width=700>
 
-> Note: Font settings are not yet configurable on the screen.
-
 ### Default themes
 
 You can choose a new theme from Fine v1.4 or later, or an earlier theme and apply and customize it.
 
-<img src="./resource/apply_theme.gif" width=500>
+<img src="./resource/theme.gif" width=600>
+
+### Fonts
+
+You can also change the font, and export font bundled file.
+
+<img src="./resource/font.gif" width=600>
 
 ### Export
 
-You can export the theme file you set.
+You can export the theme file as `theme_gen.go` you set.
+
+If the `Generate font file` is checked, the font file is also exported as `font_gen.go` (It will not be exported if you have not changed any of the fonts).
 
 The following is an example of the output `theme_gen.go`.
 
