@@ -7,6 +7,7 @@ import (
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/layout"
+	ft "fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
 	"github.com/lusingander/colorpicker"
 	"github.com/lusingander/fyne-theme-generator/internal/theme"
@@ -34,11 +35,11 @@ type configPanel struct {
 	shadowColorSelector         *colorSelector
 
 	textSizeSelector           *intSelector
-	textFontSelector           *readonlyStringSelector
-	textBoldFontSelector       *readonlyStringSelector
-	textItalicFontSelector     *readonlyStringSelector
-	textBoldItalicFontSelector *readonlyStringSelector
-	textMonospaceFontSelector  *readonlyStringSelector
+	textFontSelector           *fontFilepathSelector
+	textBoldFontSelector       *fontFilepathSelector
+	textItalicFontSelector     *fontFilepathSelector
+	textBoldItalicFontSelector *fontFilepathSelector
+	textMonospaceFontSelector  *fontFilepathSelector
 
 	paddingSelector            *intSelector
 	iconInlineSizeSelector     *intSelector
@@ -114,11 +115,11 @@ func (p *configPanel) configures(ts *theme.Setting) []fyne.CanvasObject {
 	p.scrollBarColorSelector = p.newColorSelector(ts.ScrollBarColor(), ts.SetScrollBarColor)
 	p.shadowColorSelector = p.newColorSelector(ts.ShadowColor(), ts.SetShadowColor)
 	p.textSizeSelector = p.newIntSelector(ts.TextSize(), ts.SetTextSize)
-	p.textFontSelector = p.newReadonlyStringSelector(ts.TextFont().Name())
-	p.textBoldFontSelector = p.newReadonlyStringSelector(ts.TextBoldFont().Name())
-	p.textItalicFontSelector = p.newReadonlyStringSelector(ts.TextItalicFont().Name())
-	p.textBoldItalicFontSelector = p.newReadonlyStringSelector(ts.TextBoldItalicFont().Name())
-	p.textMonospaceFontSelector = p.newReadonlyStringSelector(ts.TextMonospaceFont().Name())
+	p.textFontSelector = p.newFontFilepathSelector(ts.TextFont().Name())
+	p.textBoldFontSelector = p.newFontFilepathSelector(ts.TextBoldFont().Name())
+	p.textItalicFontSelector = p.newFontFilepathSelector(ts.TextItalicFont().Name())
+	p.textBoldItalicFontSelector = p.newFontFilepathSelector(ts.TextBoldItalicFont().Name())
+	p.textMonospaceFontSelector = p.newFontFilepathSelector(ts.TextMonospaceFont().Name())
 	p.paddingSelector = p.newIntSelector(ts.Padding(), ts.SetPadding)
 	p.iconInlineSizeSelector = p.newIntSelector(ts.IconInlineSize(), ts.SetIconInlineSize)
 	p.scrollBarSizeSelector = p.newIntSelector(ts.ScrollBarSize(), ts.SetScrollBarSize)
@@ -140,11 +141,11 @@ func (p *configPanel) configures(ts *theme.Setting) []fyne.CanvasObject {
 	cs = append(cs, colorConfigure("Scroll bar color", p.scrollBarColorSelector)...)
 	cs = append(cs, colorConfigure("Shadow color", p.shadowColorSelector)...)
 	cs = append(cs, intConfigure("Text size", p.textSizeSelector)...)
-	cs = append(cs, readonlyStringConfigure("Text font", p.textFontSelector)...)
-	cs = append(cs, readonlyStringConfigure("Text bold font", p.textBoldFontSelector)...)
-	cs = append(cs, readonlyStringConfigure("Text italic font", p.textItalicFontSelector)...)
-	cs = append(cs, readonlyStringConfigure("Text bold italic font", p.textBoldItalicFontSelector)...)
-	cs = append(cs, readonlyStringConfigure("Text monospace font", p.textMonospaceFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("Text font", p.textFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("Text bold font", p.textBoldFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("Text italic font", p.textItalicFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("Text bold italic font", p.textBoldItalicFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("Text monospace font", p.textMonospaceFontSelector)...)
 	cs = append(cs, intConfigure("Padding", p.paddingSelector)...)
 	cs = append(cs, intConfigure("Icon inline size", p.iconInlineSizeSelector)...)
 	cs = append(cs, intConfigure("Scroll bar size", p.scrollBarSizeSelector)...)
@@ -174,6 +175,17 @@ func readonlyStringConfigure(label string, selector *readonlyStringSelector) []f
 	return []fyne.CanvasObject{
 		widget.NewLabel(label),
 		selector.str,
+	}
+}
+
+func fontFilepathConfigure(label string, selector *fontFilepathSelector) []fyne.CanvasObject {
+	return []fyne.CanvasObject{
+		widget.NewLabel(label),
+		fyne.NewContainerWithLayout(
+			layout.NewHBoxLayout(),
+			selector.button,
+			selector.entry,
+		),
 	}
 }
 
@@ -271,4 +283,26 @@ func (p *configPanel) newReadonlyStringSelector(defaultValue string) *readonlySt
 
 func (s *readonlyStringSelector) setValue(v string) {
 	s.str.SetText(v)
+}
+
+type fontFilepathSelector struct {
+	entry    *widget.Entry
+	button   *widget.Button
+	filepath string
+}
+
+func (p *configPanel) newFontFilepathSelector(defaultValue string) *fontFilepathSelector {
+	entry := widget.NewEntry()
+	entry.SetReadOnly(true)
+	entry.SetText(defaultValue)
+	button := widget.NewButtonWithIcon("", ft.FolderOpenIcon(), func() {})
+	selector := &fontFilepathSelector{
+		entry:  entry,
+		button: button,
+	}
+	return selector
+}
+
+func (s *fontFilepathSelector) setValue(v string) {
+	s.entry.SetText(v)
 }
