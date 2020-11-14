@@ -6,7 +6,9 @@ import (
 	"strconv"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
+	"fyne.io/fyne/storage"
 	ft "fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
 	"github.com/lusingander/colorpicker"
@@ -115,11 +117,11 @@ func (p *configPanel) configures(ts *theme.Setting) []fyne.CanvasObject {
 	p.scrollBarColorSelector = p.newColorSelector(ts.ScrollBarColor(), ts.SetScrollBarColor)
 	p.shadowColorSelector = p.newColorSelector(ts.ShadowColor(), ts.SetShadowColor)
 	p.textSizeSelector = p.newIntSelector(ts.TextSize(), ts.SetTextSize)
-	p.textFontSelector = p.newFontFilepathSelector(ts.TextFont().Name())
-	p.textBoldFontSelector = p.newFontFilepathSelector(ts.TextBoldFont().Name())
-	p.textItalicFontSelector = p.newFontFilepathSelector(ts.TextItalicFont().Name())
-	p.textBoldItalicFontSelector = p.newFontFilepathSelector(ts.TextBoldItalicFont().Name())
-	p.textMonospaceFontSelector = p.newFontFilepathSelector(ts.TextMonospaceFont().Name())
+	p.textFontSelector = p.newFontFilepathSelector(ts.TextFont().Name(), ts.SetTextFont)
+	p.textBoldFontSelector = p.newFontFilepathSelector(ts.TextBoldFont().Name(), ts.SetTextBoldFont)
+	p.textItalicFontSelector = p.newFontFilepathSelector(ts.TextItalicFont().Name(), ts.SetTextItalicFont)
+	p.textBoldItalicFontSelector = p.newFontFilepathSelector(ts.TextBoldItalicFont().Name(), ts.SetTextBoldItalicFont)
+	p.textMonospaceFontSelector = p.newFontFilepathSelector(ts.TextMonospaceFont().Name(), ts.SetTextMonospaceFont)
 	p.paddingSelector = p.newIntSelector(ts.Padding(), ts.SetPadding)
 	p.iconInlineSizeSelector = p.newIntSelector(ts.IconInlineSize(), ts.SetIconInlineSize)
 	p.scrollBarSizeSelector = p.newIntSelector(ts.ScrollBarSize(), ts.SetScrollBarSize)
@@ -286,23 +288,55 @@ func (s *readonlyStringSelector) setValue(v string) {
 }
 
 type fontFilepathSelector struct {
+	parent   fyne.Window
 	entry    *widget.Entry
 	button   *widget.Button
 	filepath string
+	update   func(fyne.Resource)
+	reflesh  func()
 }
 
-func (p *configPanel) newFontFilepathSelector(defaultValue string) *fontFilepathSelector {
-	entry := widget.NewEntry()
-	entry.SetReadOnly(true)
-	entry.SetText(defaultValue)
-	button := widget.NewButtonWithIcon("", ft.FolderOpenIcon(), func() {})
+func (p *configPanel) newFontFilepathSelector(defaultValue string, update func(fyne.Resource)) *fontFilepathSelector {
 	selector := &fontFilepathSelector{
-		entry:  entry,
-		button: button,
+		parent:  p.parent,
+		update:  update,
+		reflesh: p.reflesh,
 	}
+	selector.entry = widget.NewEntry()
+	selector.entry.SetReadOnly(true)
+	selector.entry.SetText(defaultValue)
+	selector.button = widget.NewButtonWithIcon("", ft.FolderOpenIcon(), selector.openFileDialog)
 	return selector
 }
 
 func (s *fontFilepathSelector) setValue(v string) {
 	s.entry.SetText(v)
+}
+
+func (s *fontFilepathSelector) openFileDialog() {
+	d := dialog.NewFileOpen(s.loadFontfileWrapper, s.parent)
+	d.SetFilter(storage.NewExtensionFileFilter([]string{".ttf", ".otf"}))
+	d.Show()
+}
+
+func (s *fontFilepathSelector) loadFontfileWrapper(reader fyne.URIReadCloser, err error) {
+	if err == nil {
+		err = s.loadFontfile(reader)
+	}
+	if err != nil {
+		dialog.ShowError(err, s.parent)
+	}
+}
+
+func (s *fontFilepathSelector) loadFontfile(reader fyne.URIReadCloser) error {
+	defer reader.Close()
+	path := reader.URI().String()[7:] // `file://`
+	res, err := fyne.LoadResourceFromPath(path)
+	if err != nil {
+		return err
+	}
+	s.setValue(res.Name())
+	s.update(res)
+	s.reflesh()
+	return nil
 }
