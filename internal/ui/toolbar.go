@@ -42,6 +42,8 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme)) {
 	themeStructNameEntry.SetText(p.current.ThemeStructName())
 	themeStructNameEntry.OnChanged = func(s string) { p.current.SetThemeStructName(s) }
 
+	exportFontCheck := widget.NewCheck("Generate font file", p.current.SetExportFontFile)
+
 	exportButton := widget.NewButton("Export theme", p.export)
 
 	p.panel = fyne.NewContainerWithLayout(
@@ -59,6 +61,7 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme)) {
 			packageNameEntry,
 			themeStructNameLabel,
 			themeStructNameEntry,
+			exportFontCheck,
 			exportButton,
 		),
 	)
@@ -76,6 +79,10 @@ func (p *toolbarPanel) export() {
 	msg := fmt.Sprintf("Success to export file: %s", dstTheme)
 	if dstFont != "" {
 		msg += fmt.Sprintf(", %s", dstFont)
+	} else {
+		if p.current.ExportFontFile() {
+			msg += "\n\nFont file is not exported because the font has not been changed..."
+		}
 	}
 	dialog.ShowInformation("Success", msg, p.parent)
 }

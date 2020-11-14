@@ -72,6 +72,8 @@ type Setting struct {
 	scrollBarSmallSize int
 
 	userSettingDefaultTheme fyne.Theme
+
+	exportFontFile bool
 }
 
 func NewSetting() *Setting {
@@ -108,6 +110,7 @@ func NewSetting() *Setting {
 		scrollBarSize:           userSettingDefaultTheme.ScrollBarSize(),
 		scrollBarSmallSize:      userSettingDefaultTheme.ScrollBarSmallSize(),
 		userSettingDefaultTheme: userSettingDefaultTheme,
+		exportFontFile:          false,
 	}
 }
 
@@ -165,6 +168,9 @@ func (s *Setting) SetIconInlineSize(size int)               { s.iconInlineSize =
 func (s *Setting) SetScrollBarSize(size int)                { s.scrollBarSize = size }
 func (s *Setting) SetScrollBarSmallSize(size int)           { s.scrollBarSmallSize = size }
 
+func (s *Setting) ExportFontFile() bool     { return s.exportFontFile }
+func (s *Setting) SetExportFontFile(b bool) { s.exportFontFile = b }
+
 func (s *Setting) UpdateTheme(t fyne.Theme) {
 	s.SetBackgroundColor(t.BackgroundColor())
 	s.SetButtonColor(t.ButtonColor())
@@ -212,12 +218,12 @@ func (s *Setting) isSetTextMonospaceFont() bool {
 	return s.userSettingDefaultTheme.TextMonospaceFont().Name() != s.textMonospaceFont.Name()
 }
 
+func (s *Setting) isSetOneOfFonts() bool {
+	return s.isSetTextFont() || s.isSetTextBoldFont() || s.isSetTextItalicFont() || s.isSetTextBoldItalicFont() || s.isSetTextMonospaceFont()
+}
+
 func (s *Setting) needToGenerateFont() bool {
-	return s.isSetTextFont() ||
-		s.isSetTextBoldFont() ||
-		s.isSetTextItalicFont() ||
-		s.isSetTextBoldItalicFont() ||
-		s.isSetTextMonospaceFont()
+	return s.exportFontFile && s.isSetOneOfFonts()
 }
 
 type fyneOldDarkTheme struct{}
