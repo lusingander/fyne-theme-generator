@@ -65,7 +65,10 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme)) {
 }
 
 func (p *toolbarPanel) export() {
+	prog := dialog.NewProgressInfinite("Export", "exporting...", p.parent)
+	prog.Show()
 	dstTheme, dstFont, err := theme.Generate(p.current)
+	prog.Hide()
 	if err != nil {
 		dialog.ShowError(err, p.parent)
 		return
