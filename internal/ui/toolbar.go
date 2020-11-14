@@ -65,11 +65,11 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme)) {
 }
 
 func (p *toolbarPanel) export() {
-	dst, err := theme.Generate(p.current)
+	dstTheme, dstFont, err := theme.Generate(p.current)
 	if err != nil {
 		dialog.ShowError(err, p.parent)
 		return
 	}
-	msg := fmt.Sprintf("Success to export file: %s", dst)
+	msg := fmt.Sprintf("Success to export file: %s, %s", dstTheme, dstFont)
 	dialog.ShowInformation("Success", msg, p.parent)
 }

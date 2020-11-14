@@ -320,7 +320,7 @@ func (s *fontFilepathSelector) openFileDialog() {
 }
 
 func (s *fontFilepathSelector) loadFontfileWrapper(reader fyne.URIReadCloser, err error) {
-	if err == nil {
+	if err == nil && reader != nil {
 		err = s.loadFontfile(reader)
 	}
 	if err != nil {
