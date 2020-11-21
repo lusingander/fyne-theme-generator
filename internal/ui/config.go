@@ -19,7 +19,7 @@ type configPanel struct {
 	panel   fyne.CanvasObject
 	parent  fyne.Window
 	current *theme.Setting
-	reflesh func()
+	refresh func()
 
 	backgroundColorSelector     *colorSelector
 	buttonColorSelector         *colorSelector
@@ -53,7 +53,7 @@ func (u *ui) newConfigPanel() *configPanel {
 	p := &configPanel{
 		parent:  u.window,
 		current: u.current,
-		reflesh: u.reflesh,
+		refresh: u.refresh,
 	}
 	p.build()
 	return p
@@ -197,7 +197,7 @@ type colorSelector struct {
 	tmp          color.Color
 	update       func(color.Color)
 	sampleWidget fyne.CanvasObject
-	reflesh      func()
+	refresh      func()
 }
 
 func (p *configPanel) newColorSelector(defaultColor color.Color, update func(color.Color)) *colorSelector {
@@ -209,18 +209,18 @@ func (p *configPanel) newColorSelector(defaultColor color.Color, update func(col
 		rect:    rect,
 		tmp:     defaultColor,
 		update:  update,
-		reflesh: p.reflesh,
+		refresh: p.refresh,
 	}
-	selector.setColorAndReflesh(defaultColor)
+	selector.setColorAndRefresh(defaultColor)
 	// colorpicker doesn't currently consider alpha...
 	rect.SetOnChange(selector.setColorKeepAlpha)
 	entry.OnChanged = func(s string) {
 		var r, g, b, a uint8
 		l := len(s)
 		if l > 9 {
-			selector.setColorAndReflesh(selector.tmp)
+			selector.setColorAndRefresh(selector.tmp)
 		} else if _, err := fmt.Sscanf(s, "#%02x%02x%02x%02x", &r, &g, &b, &a); l == 9 && err == nil {
-			selector.setColorAndReflesh(color.RGBA{r, g, b, a})
+			selector.setColorAndRefresh(color.RGBA{r, g, b, a})
 		}
 	}
 	return selector
@@ -229,13 +229,13 @@ func (p *configPanel) newColorSelector(defaultColor color.Color, update func(col
 func (c *colorSelector) setColorKeepAlpha(clr color.Color) {
 	r, g, b, _ := clr.RGBA()
 	_, _, _, a := c.tmp.RGBA()
-	c.setColorAndReflesh(color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
+	c.setColorAndRefresh(color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
 }
 
-func (c *colorSelector) setColorAndReflesh(clr color.Color) {
+func (c *colorSelector) setColorAndRefresh(clr color.Color) {
 	c.setColor(clr)
 	c.update(clr)
-	c.reflesh()
+	c.refresh()
 }
 
 func (c *colorSelector) setColor(clr color.Color) {
@@ -262,7 +262,7 @@ func (p *configPanel) newIntSelector(defaultValue int, update func(int)) *intSel
 	entry.OnChanged = func(s string) {
 		if n, err := strconv.Atoi(s); err == nil {
 			update(n)
-			p.reflesh()
+			p.refresh()
 		}
 	}
 	return selector
@@ -293,14 +293,14 @@ type fontFilepathSelector struct {
 	button   *widget.Button
 	filepath string
 	update   func(fyne.Resource)
-	reflesh  func()
+	refresh  func()
 }
 
 func (p *configPanel) newFontFilepathSelector(defaultValue string, update func(fyne.Resource)) *fontFilepathSelector {
 	selector := &fontFilepathSelector{
 		parent:  p.parent,
 		update:  update,
-		reflesh: p.reflesh,
+		refresh: p.refresh,
 	}
 	selector.entry = widget.NewEntry()
 	selector.entry.SetReadOnly(true)
@@ -337,6 +337,6 @@ func (s *fontFilepathSelector) loadFontfile(reader fyne.URIReadCloser) error {
 	}
 	s.setValue(res.Name())
 	s.update(res)
-	s.reflesh()
+	s.refresh()
 	return nil
 }

@@ -29,7 +29,7 @@ func new(w fyne.Window) *ui {
 	}
 }
 
-func (u *ui) reflesh() {
+func (u *ui) refresh() {
 	fyne.CurrentApp().Settings().SetTheme(u.current)
 }
 
@@ -58,14 +58,14 @@ func (u *ui) setContent(showWidgets bool) {
 func (u *ui) applyTheme(t fyne.Theme) {
 	u.current.UpdateTheme(t)
 	u.configPanel.applyCurrentTheme()
-	u.reflesh()
+	u.refresh()
 }
 
 func (u *ui) connectWidgetPanel() {
 	u.setContent(true)
 	u.widgetsPanel.connect(u.disconnectWidgetPanel)
 	u.widgetsPanelWindow.Close()
-	u.reflesh()
+	u.refresh()
 }
 
 func (u *ui) disconnectWidgetPanel() {
@@ -75,5 +75,5 @@ func (u *ui) disconnectWidgetPanel() {
 	u.widgetsPanelWindow.SetContent(u.widgetsPanel.panel)
 	u.widgetsPanelWindow.Show()
 	u.window.Resize(u.window.Content().MinSize())
-	u.reflesh()
+	u.refresh()
 }

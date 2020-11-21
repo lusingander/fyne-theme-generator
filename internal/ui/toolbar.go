@@ -22,18 +22,18 @@ func (u *ui) newToolbarPanel() *toolbarPanel {
 		parent:  u.window,
 		current: u.current,
 	}
-	p.build(u.applyTheme, u.reflesh)
+	p.build(u.applyTheme, u.refresh)
 	return p
 }
 
-func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme), refleshFunc func()) {
+func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme), refreshFunc func()) {
 	themeSelect := widget.NewSelect(theme.EmbeddedThemes, func(string) {})
 	themeSelect.SetSelectedIndex(0)
 	themeApplyButton := widget.NewButton("Apply", func() {
 		applyThemeFunc(theme.GetEmbeddedThemeFrom(themeSelect.Selected))
 	})
 
-	refleshButton := widget.NewButtonWithIcon("", ft.ViewRefreshIcon(), refleshFunc)
+	refreshButton := widget.NewButtonWithIcon("", ft.ViewRefreshIcon(), refreshFunc)
 
 	packageNameLabel := widget.NewLabel("Package name:")
 	packageNameEntry := widget.NewEntry()
@@ -59,7 +59,7 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme), refleshFunc func()
 		),
 		fyne.NewContainerWithLayout(
 			layout.NewHBoxLayout(),
-			refleshButton,
+			refreshButton,
 			layout.NewSpacer(),
 			packageNameLabel,
 			packageNameEntry,
