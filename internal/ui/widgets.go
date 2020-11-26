@@ -52,6 +52,7 @@ func (p *widgetsPanel) build(onClickDisconnect func()) {
 		p.buttons(),
 		p.inputs(),
 		p.progresses(),
+		p.others(),
 	)
 }
 
@@ -203,6 +204,20 @@ func (*widgetsPanel) progresses() fyne.CanvasObject {
 			layout.NewVBoxLayout(),
 			progress,
 			progressInf,
+		),
+	)
+}
+
+func (*widgetsPanel) others() fyne.CanvasObject {
+	creditsButton := widget.NewButton("CREDITS", func() {
+		CreditsWindow(fyne.CurrentApp(), fyne.NewSize(800, 600)).Show()
+	})
+	return widget.NewGroup(
+		"Others",
+		fyne.NewContainerWithLayout(
+			layout.NewHBoxLayout(),
+			layout.NewSpacer(),
+			creditsButton,
 		),
 	)
 }

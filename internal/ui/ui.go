@@ -46,6 +46,7 @@ func (u *ui) setContent(showWidgets bool) {
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
 			u.configPanel.panel,
+			layout.NewSpacer(),
 			u.toolbarPanel.panel,
 		),
 	)
