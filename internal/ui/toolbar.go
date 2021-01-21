@@ -45,6 +45,12 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme), refreshFunc func()
 	themeStructNameEntry.SetText(p.current.ThemeStructName())
 	themeStructNameEntry.OnChanged = func(s string) { p.current.SetThemeStructName(s) }
 
+	fyneVerLabel := widget.NewLabel("Target Fyne version:")
+	fyneVerSelect := widget.NewSelect([]string{"v1", "v2"}, func(s string) {
+		p.current.SetExportForV2(s == "v2")
+	})
+	fyneVerSelect.SetSelectedIndex(1)
+
 	exportFontCheck := widget.NewCheck("Generate font file", p.current.SetExportFontFile)
 
 	exportButton := widget.NewButton("Export theme", p.export)
@@ -53,18 +59,20 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme), refreshFunc func()
 		layout.NewVBoxLayout(),
 		fyne.NewContainerWithLayout(
 			layout.NewHBoxLayout(),
-			layout.NewSpacer(),
 			themeSelect,
 			themeApplyButton,
-		),
-		fyne.NewContainerWithLayout(
-			layout.NewHBoxLayout(),
-			refreshButton,
 			layout.NewSpacer(),
 			packageNameLabel,
 			packageNameEntry,
 			themeStructNameLabel,
 			themeStructNameEntry,
+		),
+		fyne.NewContainerWithLayout(
+			layout.NewHBoxLayout(),
+			refreshButton,
+			layout.NewSpacer(),
+			fyneVerLabel,
+			fyneVerSelect,
 			exportFontCheck,
 			exportButton,
 		),

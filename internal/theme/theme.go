@@ -74,6 +74,7 @@ type Setting struct {
 	userSettingDefaultTheme fyne.Theme
 
 	exportFontFile bool
+	exportForV2    bool
 }
 
 func NewSetting() *Setting {
@@ -111,6 +112,7 @@ func NewSetting() *Setting {
 		scrollBarSmallSize:      userSettingDefaultTheme.ScrollBarSmallSize(),
 		userSettingDefaultTheme: userSettingDefaultTheme,
 		exportFontFile:          false,
+		exportForV2:             true,
 	}
 }
 
@@ -170,6 +172,8 @@ func (s *Setting) SetScrollBarSmallSize(size int)           { s.scrollBarSmallSi
 
 func (s *Setting) ExportFontFile() bool     { return s.exportFontFile }
 func (s *Setting) SetExportFontFile(b bool) { s.exportFontFile = b }
+func (s *Setting) ExportForV2() bool        { return s.exportForV2 }
+func (s *Setting) SetExportForV2(b bool)    { s.exportForV2 = b }
 
 func (s *Setting) UpdateTheme(t fyne.Theme) {
 	s.SetBackgroundColor(t.BackgroundColor())
