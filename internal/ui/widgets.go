@@ -4,12 +4,12 @@ import (
 	"net/url"
 	"time"
 
-	"fyne.io/fyne"
-	"fyne.io/fyne/data/validation"
-	"fyne.io/fyne/dialog"
-	"fyne.io/fyne/layout"
-	"fyne.io/fyne/theme"
-	"fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/data/validation"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 )
 
 const (
@@ -99,8 +99,9 @@ func (*widgetsPanel) labels() fyne.CanvasObject {
 	boldItalic.TextStyle.Italic = true
 	monospace := widget.NewLabel("Monospace text")
 	monospace.TextStyle.Monospace = true
-	return widget.NewGroup(
+	return widget.NewCard(
 		"Labels",
+		"",
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
 			fyne.NewContainerWithLayout(
@@ -120,18 +121,19 @@ func (*widgetsPanel) labels() fyne.CanvasObject {
 
 func (p *widgetsPanel) buttons() fyne.CanvasObject {
 	info := widget.NewButton("Info", func() {
-		dialog.NewInformation("Info", "information dialog...", p.parent)
+		dialog.ShowInformation("Info", "information dialog...", p.parent)
 	})
 	confirm := widget.NewButton("Confirm", func() {
-		dialog.NewConfirm("Confirm", "confirm dialog...", func(bool) {}, p.parent)
+		dialog.ShowConfirm("Confirm", "confirm dialog...", func(bool) {}, p.parent)
 	})
 	file := widget.NewButtonWithIcon("File Dialog", theme.FolderOpenIcon(), func() {
 		dialog.ShowFileOpen(func(fyne.URIReadCloser, error) {}, p.parent)
 	})
 	disabled := widget.NewButtonWithIcon("Disabled", theme.CancelIcon(), func() {})
 	disabled.Disable()
-	return widget.NewGroup(
+	return widget.NewCard(
 		"Buttons & Dialogs",
+		"",
 		fyne.NewContainerWithLayout(
 			layout.NewHBoxLayout(),
 			info,
@@ -150,19 +152,20 @@ func (*widgetsPanel) inputs() fyne.CanvasObject {
 	disabledEntry.SetText("Entry (disabled)")
 	validateEntry := widget.NewEntry()
 	validateEntry.SetPlaceHolder("Must contain a number")
-	validateEntry.SetText("abc")
+	// validateEntry.SetText("abc") // not working expectedly in v2...
 	validateEntry.Validator = validation.NewRegexp(`\d`, "Must contain a number")
 
 	selects := widget.NewSelect([]string{"Foo", "Bar", "Baz"}, func(string) {})
 	check := widget.NewCheck("Check", func(bool) {})
 	disabledCheck := widget.NewCheck("Check (disabled)", func(bool) {})
 	disabledCheck.Disable()
-	radio := widget.NewRadio([]string{"Radio"}, func(string) {})
-	disabledRadio := widget.NewRadio([]string{"Radio (disabled)"}, func(string) {})
+	radio := widget.NewRadioGroup([]string{"Radio"}, func(string) {})
+	disabledRadio := widget.NewRadioGroup([]string{"Radio (disabled)"}, func(string) {})
 	disabledRadio.Disable()
 	slider := widget.NewSlider(0, 100)
-	return widget.NewGroup(
+	return widget.NewCard(
 		"Inputs",
+		"",
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
 			fyne.NewContainerWithLayout(
@@ -198,8 +201,9 @@ func (*widgetsPanel) progresses() fyne.CanvasObject {
 		}
 	}()
 	progressInf := widget.NewProgressBarInfinite()
-	return widget.NewGroup(
+	return widget.NewCard(
 		"Progresses",
+		"",
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
 			progress,
@@ -212,8 +216,9 @@ func (*widgetsPanel) others() fyne.CanvasObject {
 	creditsButton := widget.NewButton("CREDITS", func() {
 		CreditsWindow(fyne.CurrentApp(), fyne.NewSize(800, 600)).Show()
 	})
-	return widget.NewGroup(
+	return widget.NewCard(
 		"Others",
+		"",
 		fyne.NewContainerWithLayout(
 			layout.NewHBoxLayout(),
 			layout.NewSpacer(),
