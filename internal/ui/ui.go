@@ -1,8 +1,8 @@
 package ui
 
 import (
-	"fyne.io/fyne"
-	"fyne.io/fyne/layout"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/layout"
 	"github.com/lusingander/fyne-theme-generator/internal/theme"
 )
 

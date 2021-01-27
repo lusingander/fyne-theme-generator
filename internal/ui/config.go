@@ -5,12 +5,12 @@ import (
 	"image/color"
 	"strconv"
 
-	"fyne.io/fyne"
-	"fyne.io/fyne/dialog"
-	"fyne.io/fyne/layout"
-	"fyne.io/fyne/storage"
-	ft "fyne.io/fyne/theme"
-	"fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/storage"
+	ft "fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 	"github.com/lusingander/colorpicker"
 	"github.com/lusingander/fyne-theme-generator/internal/theme"
 )
@@ -36,17 +36,17 @@ type configPanel struct {
 	scrollBarColorSelector      *colorSelector
 	shadowColorSelector         *colorSelector
 
-	textSizeSelector           *intSelector
+	textSizeSelector           *floatSelector
 	textFontSelector           *fontFilepathSelector
 	textBoldFontSelector       *fontFilepathSelector
 	textItalicFontSelector     *fontFilepathSelector
 	textBoldItalicFontSelector *fontFilepathSelector
 	textMonospaceFontSelector  *fontFilepathSelector
 
-	paddingSelector            *intSelector
-	iconInlineSizeSelector     *intSelector
-	scrollBarSizeSelector      *intSelector
-	scrollBarSmallSizeSelector *intSelector
+	paddingSelector            *floatSelector
+	iconInlineSizeSelector     *floatSelector
+	scrollBarSizeSelector      *floatSelector
+	scrollBarSmallSizeSelector *floatSelector
 }
 
 func (u *ui) newConfigPanel() *configPanel {
@@ -116,16 +116,16 @@ func (p *configPanel) configures(ts *theme.Setting) []fyne.CanvasObject {
 	p.focusColorSelector = p.newColorSelector(ts.FocusColor(), ts.SetFocusColor)
 	p.scrollBarColorSelector = p.newColorSelector(ts.ScrollBarColor(), ts.SetScrollBarColor)
 	p.shadowColorSelector = p.newColorSelector(ts.ShadowColor(), ts.SetShadowColor)
-	p.textSizeSelector = p.newIntSelector(ts.TextSize(), ts.SetTextSize)
+	p.textSizeSelector = p.newFloatSelector(ts.TextSize(), ts.SetTextSize)
 	p.textFontSelector = p.newFontFilepathSelector(ts.TextFont().Name(), ts.SetTextFont)
 	p.textBoldFontSelector = p.newFontFilepathSelector(ts.TextBoldFont().Name(), ts.SetTextBoldFont)
 	p.textItalicFontSelector = p.newFontFilepathSelector(ts.TextItalicFont().Name(), ts.SetTextItalicFont)
 	p.textBoldItalicFontSelector = p.newFontFilepathSelector(ts.TextBoldItalicFont().Name(), ts.SetTextBoldItalicFont)
 	p.textMonospaceFontSelector = p.newFontFilepathSelector(ts.TextMonospaceFont().Name(), ts.SetTextMonospaceFont)
-	p.paddingSelector = p.newIntSelector(ts.Padding(), ts.SetPadding)
-	p.iconInlineSizeSelector = p.newIntSelector(ts.IconInlineSize(), ts.SetIconInlineSize)
-	p.scrollBarSizeSelector = p.newIntSelector(ts.ScrollBarSize(), ts.SetScrollBarSize)
-	p.scrollBarSmallSizeSelector = p.newIntSelector(ts.ScrollBarSmallSize(), ts.SetScrollBarSmallSize)
+	p.paddingSelector = p.newFloatSelector(ts.Padding(), ts.SetPadding)
+	p.iconInlineSizeSelector = p.newFloatSelector(ts.IconInlineSize(), ts.SetIconInlineSize)
+	p.scrollBarSizeSelector = p.newFloatSelector(ts.ScrollBarSize(), ts.SetScrollBarSize)
+	p.scrollBarSmallSizeSelector = p.newFloatSelector(ts.ScrollBarSmallSize(), ts.SetScrollBarSmallSize)
 
 	cs := make([]fyne.CanvasObject, 0)
 	cs = append(cs, colorConfigure("Background color", p.backgroundColorSelector)...)
@@ -142,16 +142,16 @@ func (p *configPanel) configures(ts *theme.Setting) []fyne.CanvasObject {
 	cs = append(cs, colorConfigure("Focus color", p.focusColorSelector)...)
 	cs = append(cs, colorConfigure("Scroll bar color", p.scrollBarColorSelector)...)
 	cs = append(cs, colorConfigure("Shadow color", p.shadowColorSelector)...)
-	cs = append(cs, intConfigure("Text size", p.textSizeSelector)...)
+	cs = append(cs, floatConfigure("Text size", p.textSizeSelector)...)
 	cs = append(cs, fontFilepathConfigure("Text font", p.textFontSelector)...)
 	cs = append(cs, fontFilepathConfigure("Text bold font", p.textBoldFontSelector)...)
 	cs = append(cs, fontFilepathConfigure("Text italic font", p.textItalicFontSelector)...)
 	cs = append(cs, fontFilepathConfigure("Text bold italic font", p.textBoldItalicFontSelector)...)
 	cs = append(cs, fontFilepathConfigure("Text monospace font", p.textMonospaceFontSelector)...)
-	cs = append(cs, intConfigure("Padding", p.paddingSelector)...)
-	cs = append(cs, intConfigure("Icon inline size", p.iconInlineSizeSelector)...)
-	cs = append(cs, intConfigure("Scroll bar size", p.scrollBarSizeSelector)...)
-	cs = append(cs, intConfigure("Scroll bar small size", p.scrollBarSmallSizeSelector)...)
+	cs = append(cs, floatConfigure("Padding", p.paddingSelector)...)
+	cs = append(cs, floatConfigure("Icon inline size", p.iconInlineSizeSelector)...)
+	cs = append(cs, floatConfigure("Scroll bar size", p.scrollBarSizeSelector)...)
+	cs = append(cs, floatConfigure("Scroll bar small size", p.scrollBarSmallSizeSelector)...)
 	return cs
 }
 
@@ -166,7 +166,7 @@ func colorConfigure(label string, selector *colorSelector) []fyne.CanvasObject {
 	}
 }
 
-func intConfigure(label string, selector *intSelector) []fyne.CanvasObject {
+func floatConfigure(label string, selector *floatSelector) []fyne.CanvasObject {
 	return []fyne.CanvasObject{
 		widget.NewLabel(label),
 		selector.entry,
@@ -203,7 +203,7 @@ type colorSelector struct {
 func (p *configPanel) newColorSelector(defaultColor color.Color, update func(color.Color)) *colorSelector {
 	entry := &widget.Entry{}
 	rect := colorpicker.NewColorSelectModalRect(p.parent, fyne.NewSize(20, 20), defaultColor)
-	rect.SetPickerStyle(colorpicker.StyleCircle)
+	rect.SetPickerStyle(colorpicker.StyleHueCircle)
 	selector := &colorSelector{
 		entry:   entry,
 		rect:    rect,
@@ -249,27 +249,27 @@ func hexColorString(c color.Color) string {
 	return fmt.Sprintf("#%.2X%.2X%.2X%.2X", rgba.R, rgba.G, rgba.B, rgba.A)
 }
 
-type intSelector struct {
+type floatSelector struct {
 	entry *widget.Entry
 }
 
-func (p *configPanel) newIntSelector(defaultValue int, update func(int)) *intSelector {
+func (p *configPanel) newFloatSelector(defaultValue float32, update func(float32)) *floatSelector {
 	entry := &widget.Entry{}
-	selector := &intSelector{
+	selector := &floatSelector{
 		entry: entry,
 	}
 	selector.setValue(defaultValue)
 	entry.OnChanged = func(s string) {
-		if n, err := strconv.Atoi(s); err == nil {
-			update(n)
+		if f, err := strconv.ParseFloat(s, 32); err == nil {
+			update(float32(f))
 			p.refresh()
 		}
 	}
 	return selector
 }
 
-func (s *intSelector) setValue(v int) {
-	s.entry.SetText(strconv.Itoa(v))
+func (s *floatSelector) setValue(v float32) {
+	s.entry.SetText(strconv.FormatFloat(float64(v), 'f', 2, 32))
 }
 
 type readonlyStringSelector struct {
@@ -303,7 +303,7 @@ func (p *configPanel) newFontFilepathSelector(defaultValue string, update func(f
 		refresh: p.refresh,
 	}
 	selector.entry = widget.NewEntry()
-	selector.entry.SetReadOnly(true)
+	selector.entry.Disable()
 	selector.entry.SetText(defaultValue)
 	selector.button = widget.NewButtonWithIcon("", ft.FolderOpenIcon(), selector.openFileDialog)
 	return selector

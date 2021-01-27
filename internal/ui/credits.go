@@ -6,9 +6,10 @@ import (
 	"net/url"
 	"strings"
 
-	"fyne.io/fyne"
-	"fyne.io/fyne/layout"
-	"fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/widget"
 )
 
 // CreditsWindow returns a window displaying a list of licenses.
@@ -23,7 +24,7 @@ func CreditsWindow(app fyne.App, size fyne.Size) fyne.Window {
 func CreditsContainer() fyne.CanvasObject {
 	nameLabel := widget.NewLabel("")
 	urlLabel := widget.NewHyperlink("", nil)
-	header := widget.NewVBox(nameLabel, urlLabel)
+	header := container.NewVBox(nameLabel, urlLabel)
 	entry := widget.NewMultiLineEntry()
 	entry.Wrapping = fyne.TextWrapBreak
 	width := 0
@@ -56,12 +57,12 @@ func CreditsContainer() fyne.CanvasObject {
 		entry.SetText(c.text)
 	}
 	list.Select(0)
-	text := widget.NewScrollContainer(entry)
+	text := container.NewScroll(entry)
 	license := fyne.NewContainerWithLayout(
 		layout.NewBorderLayout(header, nil, nil, nil),
 		header, text,
 	)
-	splitContainer := widget.NewHSplitContainer(list, license)
+	splitContainer := container.NewHSplit(list, license)
 	splitContainer.SetOffset(0)
 	return splitContainer
 }
