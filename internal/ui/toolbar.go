@@ -36,12 +36,12 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme, fyne.ThemeVariant),
 	refreshButton := widget.NewButtonWithIcon("", ft.ViewRefreshIcon(), refreshFunc)
 
 	packageNameLabel := widget.NewLabel("Package name:")
-	packageNameEntry := widget.NewEntry()
+	packageNameEntry := &widget.Entry{Wrapping: fyne.TextWrapOff}
 	packageNameEntry.SetText(p.current.PackageName())
 	packageNameEntry.OnChanged = func(s string) { p.current.SetPackageName(s) }
 
 	themeStructNameLabel := widget.NewLabel("Theme struct name:")
-	themeStructNameEntry := widget.NewEntry()
+	themeStructNameEntry := &widget.Entry{Wrapping: fyne.TextWrapOff}
 	themeStructNameEntry.SetText(p.current.ThemeStructName())
 	themeStructNameEntry.OnChanged = func(s string) { p.current.SetThemeStructName(s) }
 
