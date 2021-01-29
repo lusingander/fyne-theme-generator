@@ -19,6 +19,8 @@ const (
 	fyneOldLightThemeName = "Fyne Light (old)"
 )
 
+const dummyVariant fyne.ThemeVariant = 100
+
 var EmbeddedThemes = []string{
 	fyneDarkThemeName,
 	fyneLightThemeName,
@@ -26,18 +28,18 @@ var EmbeddedThemes = []string{
 	fyneOldLightThemeName,
 }
 
-func GetEmbeddedThemeFrom(name string) fyne.Theme {
+func GetEmbeddedThemeFrom(name string) (fyne.Theme, fyne.ThemeVariant) {
 	switch name {
 	case fyneDarkThemeName:
-		return theme.DarkTheme()
+		return theme.DarkTheme(), theme.VariantDark
 	case fyneLightThemeName:
-		return theme.LightTheme()
+		return theme.LightTheme(), theme.VariantLight
 	case fyneOldDarkThemeName:
-		return theme.FromLegacy(&fyneOldDarkTheme{})
+		return theme.FromLegacy(&fyneOldDarkTheme{}), dummyVariant
 	case fyneOldLightThemeName:
-		return theme.FromLegacy(&fyneOldLightTheme{})
+		return theme.FromLegacy(&fyneOldLightTheme{}), dummyVariant
 	}
-	return theme.DefaultTheme()
+	return theme.DefaultTheme(), dummyVariant
 }
 
 type Setting struct {
@@ -176,22 +178,21 @@ func (s *Setting) SetExportFontFile(b bool) { s.exportFontFile = b }
 func (s *Setting) ExportForV2() bool        { return s.exportForV2 }
 func (s *Setting) SetExportForV2(b bool)    { s.exportForV2 = b }
 
-func (s *Setting) UpdateTheme(t fyne.Theme) {
-	variant := fyne.CurrentApp().Settings().ThemeVariant()
-	s.SetBackgroundColor(t.Color(theme.ColorNameBackground, variant))
-	s.SetButtonColor(t.Color(theme.ColorNameButton, variant))
-	s.SetDisabledButtonColor(t.Color(theme.ColorNameDisabledButton, variant))
-	s.SetTextColor(t.Color(theme.ColorNameForeground, variant))
-	s.SetDisabledTextColor(t.Color(theme.ColorNameDisabled, variant))
-	s.SetIconColor(t.Color(theme.ColorNameForeground, variant))
-	s.SetDisabledIconColor(t.Color(theme.ColorNameDisabled, variant))
-	s.SetHyperlinkColor(t.Color(theme.ColorNamePrimary, variant))
-	s.SetPlaceHolderColor(t.Color(theme.ColorNamePlaceHolder, variant))
-	s.SetPrimaryColor(t.Color(theme.ColorNamePrimary, variant))
-	s.SetHoverColor(t.Color(theme.ColorNameHover, variant))
-	s.SetFocusColor(t.Color(theme.ColorNameFocus, variant))
-	s.SetScrollBarColor(t.Color(theme.ColorNameScrollBar, variant))
-	s.SetShadowColor(t.Color(theme.ColorNameShadow, variant))
+func (s *Setting) UpdateTheme(t fyne.Theme, v fyne.ThemeVariant) {
+	s.SetBackgroundColor(t.Color(theme.ColorNameBackground, v))
+	s.SetButtonColor(t.Color(theme.ColorNameButton, v))
+	s.SetDisabledButtonColor(t.Color(theme.ColorNameDisabledButton, v))
+	s.SetTextColor(t.Color(theme.ColorNameForeground, v))
+	s.SetDisabledTextColor(t.Color(theme.ColorNameDisabled, v))
+	s.SetIconColor(t.Color(theme.ColorNameForeground, v))
+	s.SetDisabledIconColor(t.Color(theme.ColorNameDisabled, v))
+	s.SetHyperlinkColor(t.Color(theme.ColorNamePrimary, v))
+	s.SetPlaceHolderColor(t.Color(theme.ColorNamePlaceHolder, v))
+	s.SetPrimaryColor(t.Color(theme.ColorNamePrimary, v))
+	s.SetHoverColor(t.Color(theme.ColorNameHover, v))
+	s.SetFocusColor(t.Color(theme.ColorNameFocus, v))
+	s.SetScrollBarColor(t.Color(theme.ColorNameScrollBar, v))
+	s.SetShadowColor(t.Color(theme.ColorNameShadow, v))
 	s.SetTextSize(t.Size(theme.SizeNameText))
 	s.SetTextFont(t.Font(fyne.TextStyle{}))
 	s.SetTextBoldFont(t.Font(fyne.TextStyle{Bold: true}))
