@@ -37,7 +37,7 @@ func GetEmbeddedThemeFrom(name string) fyne.Theme {
 	case fyneOldLightThemeName:
 		return theme.FromLegacy(&fyneOldLightTheme{})
 	}
-	return theme.DarkTheme()
+	return theme.DefaultTheme()
 }
 
 type Setting struct {
@@ -80,7 +80,7 @@ type Setting struct {
 func NewSetting() *Setting {
 	userSettingDefaultTheme := fyne.CurrentApp().Settings().Theme()
 	if userSettingDefaultTheme == nil {
-		userSettingDefaultTheme = theme.DarkTheme()
+		userSettingDefaultTheme = theme.DefaultTheme()
 	}
 	variant := fyne.CurrentApp().Settings().ThemeVariant()
 
@@ -236,10 +236,16 @@ func (s *Setting) Color(c fyne.ThemeColorName, v fyne.ThemeVariant) color.Color 
 	switch c {
 	case theme.ColorNameBackground:
 		return s.backgroundColor
+	// case theme.ColorNameInputBackground:
+	// 	return mil
+	case theme.ColorNameForeground:
+		return s.textColor
 	case theme.ColorNameButton:
 		return s.buttonColor
 	case theme.ColorNameDisabled:
 		return s.disabledTextColor
+	case theme.ColorNameDisabledButton:
+		return s.disabledButtonColor
 	case theme.ColorNamePlaceHolder:
 		return s.placeHolderColor
 	case theme.ColorNameScrollBar:
@@ -252,6 +258,10 @@ func (s *Setting) Color(c fyne.ThemeColorName, v fyne.ThemeVariant) color.Color 
 		return s.focusColor
 	case theme.ColorNameShadow:
 		return s.shadowColor
+	// case theme.ColorNameError:
+	// 	return nil
+	// case theme.ColorNamePressed:
+	// 	return nil
 	default:
 		return theme.DefaultTheme().Color(c, v)
 	}
@@ -357,23 +367,23 @@ func (fyneOldDarkTheme) TextSize() int {
 }
 
 func (fyneOldDarkTheme) TextFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{})
+	return theme.DefaultTheme().Font(fyne.TextStyle{})
 }
 
 func (fyneOldDarkTheme) TextBoldFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Bold: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Bold: true})
 }
 
 func (fyneOldDarkTheme) TextItalicFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Italic: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Italic: true})
 }
 
 func (fyneOldDarkTheme) TextBoldItalicFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Bold: true, Italic: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Bold: true, Italic: true})
 }
 
 func (fyneOldDarkTheme) TextMonospaceFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Monospace: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Monospace: true})
 }
 
 func (fyneOldDarkTheme) Padding() int {
@@ -455,23 +465,23 @@ func (fyneOldLightTheme) TextSize() int {
 }
 
 func (fyneOldLightTheme) TextFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{})
+	return theme.DefaultTheme().Font(fyne.TextStyle{})
 }
 
 func (fyneOldLightTheme) TextBoldFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Bold: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Bold: true})
 }
 
 func (fyneOldLightTheme) TextItalicFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Italic: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Italic: true})
 }
 
 func (fyneOldLightTheme) TextBoldItalicFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Bold: true, Italic: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Bold: true, Italic: true})
 }
 
 func (fyneOldLightTheme) TextMonospaceFont() fyne.Resource {
-	return fyne.CurrentApp().Settings().Theme().Font(fyne.TextStyle{Monospace: true})
+	return theme.DefaultTheme().Font(fyne.TextStyle{Monospace: true})
 }
 
 func (fyneOldLightTheme) Padding() int {
