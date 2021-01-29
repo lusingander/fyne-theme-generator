@@ -21,32 +21,35 @@ type configPanel struct {
 	current *theme.Setting
 	refresh func()
 
-	backgroundColorSelector     *colorSelector
-	buttonColorSelector         *colorSelector
-	disabledButtonColorSelector *colorSelector
-	textColorSelector           *colorSelector
-	disabledTextColorSelector   *colorSelector
-	iconColorSelector           *colorSelector
-	disabledIconColorSelector   *colorSelector
-	hyperlinkColorSelector      *colorSelector
-	placeHolderColorSelector    *colorSelector
-	primaryColorSelector        *colorSelector
-	hoverColorSelector          *colorSelector
-	focusColorSelector          *colorSelector
-	scrollBarColorSelector      *colorSelector
-	shadowColorSelector         *colorSelector
+	backgroundColorSelector      *colorSelector
+	buttonColorSelector          *colorSelector
+	disabledButtonColorSelector  *colorSelector
+	disabledColorSelector        *colorSelector
+	errorColorSelector           *colorSelector
+	focusColorSelector           *colorSelector
+	foregroundColorSelector      *colorSelector
+	hoverColorSelector           *colorSelector
+	inputBackgroundColorSelector *colorSelector
+	placeHolderColorSelector     *colorSelector
+	pressedColorSelector         *colorSelector
+	primaryColorSelector         *colorSelector
+	scrollBarColorSelector       *colorSelector
+	shadowColorSelector          *colorSelector
 
-	textSizeSelector           *floatSelector
+	captionTextSizeSelector        *floatSelector
+	inlineIconSizeSelector         *floatSelector
+	paddingSizeSelector            *floatSelector
+	scrollBarSizeSelector          *floatSelector
+	scrollBarSmallSizeSelector     *floatSelector
+	separatorThicknessSizeSelector *floatSelector
+	textSizeSelector               *floatSelector
+	inputBorderSizeSelector        *floatSelector
+
 	textFontSelector           *fontFilepathSelector
 	textBoldFontSelector       *fontFilepathSelector
 	textItalicFontSelector     *fontFilepathSelector
 	textBoldItalicFontSelector *fontFilepathSelector
 	textMonospaceFontSelector  *fontFilepathSelector
-
-	paddingSelector            *floatSelector
-	iconInlineSizeSelector     *floatSelector
-	scrollBarSizeSelector      *floatSelector
-	scrollBarSmallSizeSelector *floatSelector
 }
 
 func (u *ui) newConfigPanel() *configPanel {
@@ -63,40 +66,49 @@ func (p *configPanel) applyCurrentTheme() {
 	p.backgroundColorSelector.setColor(p.current.BackgroundColor())
 	p.buttonColorSelector.setColor(p.current.ButtonColor())
 	p.disabledButtonColorSelector.setColor(p.current.DisabledButtonColor())
-	p.textColorSelector.setColor(p.current.TextColor())
-	p.disabledTextColorSelector.setColor(p.current.DisabledTextColor())
-	p.iconColorSelector.setColor(p.current.IconColor())
-	p.disabledIconColorSelector.setColor(p.current.DisabledIconColor())
-	p.hyperlinkColorSelector.setColor(p.current.HyperlinkColor())
-	p.placeHolderColorSelector.setColor(p.current.PlaceHolderColor())
-	p.primaryColorSelector.setColor(p.current.PrimaryColor())
-	p.hoverColorSelector.setColor(p.current.HoverColor())
+	p.disabledColorSelector.setColor(p.current.DisabledColor())
+	p.errorColorSelector.setColor(p.current.ErrorColor())
 	p.focusColorSelector.setColor(p.current.FocusColor())
+	p.foregroundColorSelector.setColor(p.current.ForegroundColor())
+	p.hoverColorSelector.setColor(p.current.HoverColor())
+	p.inputBackgroundColorSelector.setColor(p.current.InputBackgroundColor())
+	p.placeHolderColorSelector.setColor(p.current.PlaceHolderColor())
+	p.pressedColorSelector.setColor(p.current.PressedColor())
+	p.primaryColorSelector.setColor(p.current.PrimaryColor())
 	p.scrollBarColorSelector.setColor(p.current.ScrollBarColor())
 	p.shadowColorSelector.setColor(p.current.ShadowColor())
+
+	p.captionTextSizeSelector.setValue(p.current.CaptionTextSize())
+	p.inlineIconSizeSelector.setValue(p.current.InlineIconSize())
+	p.paddingSizeSelector.setValue(p.current.PaddingSize())
+	p.scrollBarSizeSelector.setValue(p.current.ScrollBarSize())
+	p.scrollBarSmallSizeSelector.setValue(p.current.ScrollBarSmallSize())
+	p.separatorThicknessSizeSelector.setValue(p.current.SeparatorThicknessSize())
 	p.textSizeSelector.setValue(p.current.TextSize())
+	p.inputBorderSizeSelector.setValue(p.current.InputBorderSize())
+
 	p.textFontSelector.setValue(p.current.TextFont().Name())
 	p.textBoldFontSelector.setValue(p.current.TextBoldFont().Name())
 	p.textItalicFontSelector.setValue(p.current.TextItalicFont().Name())
 	p.textBoldItalicFontSelector.setValue(p.current.TextBoldItalicFont().Name())
 	p.textMonospaceFontSelector.setValue(p.current.TextMonospaceFont().Name())
-	p.paddingSelector.setValue(p.current.Padding())
-	p.iconInlineSizeSelector.setValue(p.current.IconInlineSize())
-	p.scrollBarSizeSelector.setValue(p.current.ScrollBarSize())
-	p.scrollBarSmallSizeSelector.setValue(p.current.ScrollBarSmallSize())
 }
 
 func (p *configPanel) build() {
 	confs := p.configures(p.current)
+	l := len(confs) / 2
+	if l%2 != 0 {
+		l++
+	}
 	p.panel = fyne.NewContainerWithLayout(
 		layout.NewHBoxLayout(),
 		fyne.NewContainerWithLayout(
 			layout.NewGridLayoutWithColumns(2),
-			confs[:len(confs)/2]...,
+			confs[:l]...,
 		),
 		fyne.NewContainerWithLayout(
 			layout.NewGridLayoutWithColumns(2),
-			confs[len(confs)/2:]...,
+			confs[l:]...,
 		),
 	)
 }
@@ -105,53 +117,61 @@ func (p *configPanel) configures(ts *theme.Setting) []fyne.CanvasObject {
 	p.backgroundColorSelector = p.newColorSelector(ts.BackgroundColor(), ts.SetBackgroundColor)
 	p.buttonColorSelector = p.newColorSelector(ts.ButtonColor(), ts.SetButtonColor)
 	p.disabledButtonColorSelector = p.newColorSelector(ts.DisabledButtonColor(), ts.SetDisabledButtonColor)
-	p.textColorSelector = p.newColorSelector(ts.TextColor(), ts.SetTextColor)
-	p.disabledTextColorSelector = p.newColorSelector(ts.DisabledTextColor(), ts.SetDisabledTextColor)
-	p.iconColorSelector = p.newColorSelector(ts.IconColor(), ts.SetIconColor)
-	p.disabledIconColorSelector = p.newColorSelector(ts.DisabledIconColor(), ts.SetDisabledIconColor)
-	p.hyperlinkColorSelector = p.newColorSelector(ts.HyperlinkColor(), ts.SetHyperlinkColor)
-	p.placeHolderColorSelector = p.newColorSelector(ts.PlaceHolderColor(), ts.SetPlaceHolderColor)
-	p.primaryColorSelector = p.newColorSelector(ts.PrimaryColor(), ts.SetPrimaryColor)
-	p.hoverColorSelector = p.newColorSelector(ts.HoverColor(), ts.SetHoverColor)
+	p.disabledColorSelector = p.newColorSelector(ts.DisabledColor(), ts.SetDisabledColor)
+	p.errorColorSelector = p.newColorSelector(ts.ErrorColor(), ts.SetErrorColor)
 	p.focusColorSelector = p.newColorSelector(ts.FocusColor(), ts.SetFocusColor)
+	p.foregroundColorSelector = p.newColorSelector(ts.ForegroundColor(), ts.SetForegroundColor)
+	p.hoverColorSelector = p.newColorSelector(ts.HoverColor(), ts.SetHoverColor)
+	p.inputBackgroundColorSelector = p.newColorSelector(ts.InputBackgroundColor(), ts.SetInputBackgroundColor)
+	p.placeHolderColorSelector = p.newColorSelector(ts.PlaceHolderColor(), ts.SetPlaceHolderColor)
+	p.pressedColorSelector = p.newColorSelector(ts.PressedColor(), ts.SetPressedColor)
+	p.primaryColorSelector = p.newColorSelector(ts.PrimaryColor(), ts.SetPrimaryColor)
 	p.scrollBarColorSelector = p.newColorSelector(ts.ScrollBarColor(), ts.SetScrollBarColor)
 	p.shadowColorSelector = p.newColorSelector(ts.ShadowColor(), ts.SetShadowColor)
+
+	p.captionTextSizeSelector = p.newFloatSelector(ts.CaptionTextSize(), ts.SetCaptionTextSize)
+	p.inlineIconSizeSelector = p.newFloatSelector(ts.InlineIconSize(), ts.SetInlineIconSize)
+	p.paddingSizeSelector = p.newFloatSelector(ts.PaddingSize(), ts.SetPaddingSize)
+	p.scrollBarSizeSelector = p.newFloatSelector(ts.ScrollBarSize(), ts.SetScrollBarSize)
+	p.scrollBarSmallSizeSelector = p.newFloatSelector(ts.ScrollBarSmallSize(), ts.SetScrollBarSmallSize)
+	p.separatorThicknessSizeSelector = p.newFloatSelector(ts.SeparatorThicknessSize(), ts.SetSeparatorThicknessSize)
 	p.textSizeSelector = p.newFloatSelector(ts.TextSize(), ts.SetTextSize)
+	p.inputBorderSizeSelector = p.newFloatSelector(ts.InputBorderSize(), ts.SetInputBorderSize)
+
 	p.textFontSelector = p.newFontFilepathSelector(ts.TextFont().Name(), ts.SetTextFont)
 	p.textBoldFontSelector = p.newFontFilepathSelector(ts.TextBoldFont().Name(), ts.SetTextBoldFont)
 	p.textItalicFontSelector = p.newFontFilepathSelector(ts.TextItalicFont().Name(), ts.SetTextItalicFont)
 	p.textBoldItalicFontSelector = p.newFontFilepathSelector(ts.TextBoldItalicFont().Name(), ts.SetTextBoldItalicFont)
 	p.textMonospaceFontSelector = p.newFontFilepathSelector(ts.TextMonospaceFont().Name(), ts.SetTextMonospaceFont)
-	p.paddingSelector = p.newFloatSelector(ts.Padding(), ts.SetPadding)
-	p.iconInlineSizeSelector = p.newFloatSelector(ts.IconInlineSize(), ts.SetIconInlineSize)
-	p.scrollBarSizeSelector = p.newFloatSelector(ts.ScrollBarSize(), ts.SetScrollBarSize)
-	p.scrollBarSmallSizeSelector = p.newFloatSelector(ts.ScrollBarSmallSize(), ts.SetScrollBarSmallSize)
 
 	cs := make([]fyne.CanvasObject, 0)
 	cs = append(cs, colorConfigure("Background color", p.backgroundColorSelector)...)
 	cs = append(cs, colorConfigure("Button color", p.buttonColorSelector)...)
-	cs = append(cs, colorConfigure("Disable button color", p.disabledButtonColorSelector)...)
-	cs = append(cs, colorConfigure("Text color", p.textColorSelector)...)
-	cs = append(cs, colorConfigure("Disable text color", p.disabledTextColorSelector)...)
-	cs = append(cs, colorConfigure("Icon color", p.iconColorSelector)...)
-	cs = append(cs, colorConfigure("Disable icon color", p.disabledIconColorSelector)...)
-	cs = append(cs, colorConfigure("Hyperlink color", p.hyperlinkColorSelector)...)
-	cs = append(cs, colorConfigure("Placeholder color", p.placeHolderColorSelector)...)
-	cs = append(cs, colorConfigure("Primary color", p.primaryColorSelector)...)
-	cs = append(cs, colorConfigure("Hover color", p.hoverColorSelector)...)
+	cs = append(cs, colorConfigure("DisabledButton color", p.disabledButtonColorSelector)...)
+	cs = append(cs, colorConfigure("Disabled color", p.disabledColorSelector)...)
+	cs = append(cs, colorConfigure("Error color", p.errorColorSelector)...)
 	cs = append(cs, colorConfigure("Focus color", p.focusColorSelector)...)
-	cs = append(cs, colorConfigure("Scroll bar color", p.scrollBarColorSelector)...)
+	cs = append(cs, colorConfigure("Foreground color", p.foregroundColorSelector)...)
+	cs = append(cs, colorConfigure("Hover color", p.hoverColorSelector)...)
+	cs = append(cs, colorConfigure("InputBackground color", p.inputBackgroundColorSelector)...)
+	cs = append(cs, colorConfigure("PlaceHolder color", p.placeHolderColorSelector)...)
+	cs = append(cs, colorConfigure("Pressed color", p.pressedColorSelector)...)
+	cs = append(cs, colorConfigure("Primary color", p.primaryColorSelector)...)
+	cs = append(cs, colorConfigure("ScrollBar color", p.scrollBarColorSelector)...)
 	cs = append(cs, colorConfigure("Shadow color", p.shadowColorSelector)...)
+	cs = append(cs, floatConfigure("CaptionText size", p.captionTextSizeSelector)...)
+	cs = append(cs, floatConfigure("InlineIcon size", p.inlineIconSizeSelector)...)
+	cs = append(cs, floatConfigure("Padding size", p.paddingSizeSelector)...)
+	cs = append(cs, floatConfigure("ScrollBar size", p.scrollBarSizeSelector)...)
+	cs = append(cs, floatConfigure("ScrollBarSmall size", p.scrollBarSmallSizeSelector)...)
+	cs = append(cs, floatConfigure("SeparatorThickness size", p.separatorThicknessSizeSelector)...)
 	cs = append(cs, floatConfigure("Text size", p.textSizeSelector)...)
+	cs = append(cs, floatConfigure("InputBorder size", p.inputBorderSizeSelector)...)
 	cs = append(cs, fontFilepathConfigure("Text font", p.textFontSelector)...)
-	cs = append(cs, fontFilepathConfigure("Text bold font", p.textBoldFontSelector)...)
-	cs = append(cs, fontFilepathConfigure("Text italic font", p.textItalicFontSelector)...)
-	cs = append(cs, fontFilepathConfigure("Text bold italic font", p.textBoldItalicFontSelector)...)
-	cs = append(cs, fontFilepathConfigure("Text monospace font", p.textMonospaceFontSelector)...)
-	cs = append(cs, floatConfigure("Padding", p.paddingSelector)...)
-	cs = append(cs, floatConfigure("Icon inline size", p.iconInlineSizeSelector)...)
-	cs = append(cs, floatConfigure("Scroll bar size", p.scrollBarSizeSelector)...)
-	cs = append(cs, floatConfigure("Scroll bar small size", p.scrollBarSmallSizeSelector)...)
+	cs = append(cs, fontFilepathConfigure("TextBold font", p.textBoldFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("TextItalic font", p.textItalicFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("TextBoldItalic font", p.textBoldItalicFontSelector)...)
+	cs = append(cs, fontFilepathConfigure("TextMonospace font", p.textMonospaceFontSelector)...)
 	return cs
 }
 
