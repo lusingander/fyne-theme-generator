@@ -173,8 +173,11 @@ func (*widgetsPanel) inputs() fyne.CanvasObject {
 				entry,
 				disabledEntry,
 			),
-			validateEntry,
-			selects,
+			fyne.NewContainerWithLayout(
+				layout.NewGridLayout(2),
+				validateEntry,
+				selects,
+			),
 			fyne.NewContainerWithLayout(
 				layout.NewGridLayout(2),
 				check,
@@ -200,14 +203,15 @@ func (*widgetsPanel) progresses() fyne.CanvasObject {
 			}
 		}
 	}()
-	progressInf := widget.NewProgressBarInfinite()
+	// changes are not reflected immediately...
+	// progressInf := widget.NewProgressBarInfinite()
 	return widget.NewCard(
 		"Progresses",
 		"",
 		fyne.NewContainerWithLayout(
 			layout.NewVBoxLayout(),
 			progress,
-			progressInf,
+			// progressInf,
 		),
 	)
 }
