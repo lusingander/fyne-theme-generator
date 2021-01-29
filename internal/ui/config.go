@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/storage"
@@ -203,9 +204,11 @@ func readonlyStringConfigure(label string, selector *readonlyStringSelector) []f
 func fontFilepathConfigure(label string, selector *fontFilepathSelector) []fyne.CanvasObject {
 	return []fyne.CanvasObject{
 		widget.NewLabel(label),
-		fyne.NewContainerWithLayout(
-			layout.NewHBoxLayout(),
+		container.NewBorder(
+			nil,
+			nil,
 			selector.button,
+			nil,
 			selector.entry,
 		),
 	}
@@ -221,7 +224,7 @@ type colorSelector struct {
 }
 
 func (p *configPanel) newColorSelector(defaultColor color.Color, update func(color.Color)) *colorSelector {
-	entry := &widget.Entry{}
+	entry := &widget.Entry{TextStyle: fyne.TextStyle{Monospace: true}}
 	rect := colorpicker.NewColorSelectModalRect(p.parent, fyne.NewSize(20, 20), defaultColor)
 	rect.SetPickerStyle(colorpicker.StyleHueCircle)
 	selector := &colorSelector{
@@ -274,7 +277,7 @@ type floatSelector struct {
 }
 
 func (p *configPanel) newFloatSelector(defaultValue float32, update func(float32)) *floatSelector {
-	entry := &widget.Entry{}
+	entry := &widget.Entry{TextStyle: fyne.TextStyle{Monospace: true}}
 	selector := &floatSelector{
 		entry: entry,
 	}
