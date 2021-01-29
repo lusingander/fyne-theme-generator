@@ -41,34 +41,87 @@ package main
 import (
 	"image/color"
 
-	"fyne.io/fyne"
-	"fyne.io/fyne/theme"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/theme"
 )
 
 type myTheme struct{}
 
-func (myTheme) BackgroundColor() color.Color      { return color.RGBA{R: 0xa7, G: 0x86, B: 0x70, A: 0xff} }
-func (myTheme) ButtonColor() color.Color          { return color.RGBA{R: 0xb9, G: 0x75, B: 0x10, A: 0xff} }
-func (myTheme) DisabledButtonColor() color.Color  { return color.RGBA{R: 0x8e, G: 0x70, B: 0x36, A: 0xff} }
-func (myTheme) TextColor() color.Color            { return color.RGBA{R: 0xf4, G: 0xe6, B: 0xcf, A: 0xff} }
-func (myTheme) DisabledTextColor() color.Color    { return color.RGBA{R: 0xbb, G: 0xae, B: 0xa1, A: 0xff} }
-func (myTheme) IconColor() color.Color            { return color.RGBA{R: 0xf4, G: 0xe6, B: 0xcf, A: 0xff} }
-func (myTheme) DisabledIconColor() color.Color    { return color.RGBA{R: 0xbb, G: 0xae, B: 0xa1, A: 0xff} }
-func (myTheme) HyperlinkColor() color.Color       { return color.RGBA{R: 0x72, G: 0x51, B: 0x8e, A: 0xff} }
-func (myTheme) PlaceHolderColor() color.Color     { return color.RGBA{R: 0xbb, G: 0xae, B: 0xa1, A: 0xff} }
-func (myTheme) PrimaryColor() color.Color         { return color.RGBA{R: 0xd6, G: 0xb1, B: 0x11, A: 0xff} }
-func (myTheme) HoverColor() color.Color           { return color.RGBA{R: 0xdf, G: 0x89, B: 0x8, A: 0xff} }
-func (myTheme) FocusColor() color.Color           { return color.RGBA{R: 0xd6, G: 0xb1, B: 0x11, A: 0xff} }
-func (myTheme) ScrollBarColor() color.Color       { return color.RGBA{R: 0x0, G: 0x0, B: 0x0, A: 0x55} }
-func (myTheme) ShadowColor() color.Color          { return color.RGBA{R: 0x0, G: 0x0, B: 0x0, A: 0x33} }
-func (myTheme) TextSize() int                     { return 12 }
-func (myTheme) TextFont() fyne.Resource           { return theme.LightTheme().TextFont() }
-func (myTheme) TextBoldFont() fyne.Resource       { return theme.LightTheme().TextBoldFont() }
-func (myTheme) TextItalicFont() fyne.Resource     { return theme.LightTheme().TextItalicFont() }
-func (myTheme) TextBoldItalicFont() fyne.Resource { return theme.LightTheme().TextBoldItalicFont() }
-func (myTheme) TextMonospaceFont() fyne.Resource  { return theme.LightTheme().TextMonospaceFont() }
-func (myTheme) Padding() int                      { return 3 }
-func (myTheme) IconInlineSize() int               { return 20 }
-func (myTheme) ScrollBarSize() int                { return 16 }
-func (myTheme) ScrollBarSmallSize() int           { return 3 }
+func (myTheme) Color(c fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
+	switch c {
+	case theme.ColorNameBackground:
+		return color.NRGBA{R: 0x30, G: 0x30, B: 0x30, A: 0xff}
+	case theme.ColorNameButton:
+		return color.Alpha16{A: 0x0}
+	case theme.ColorNameDisabledButton:
+		return color.NRGBA{R: 0x26, G: 0x26, B: 0x26, A: 0xff}
+	case theme.ColorNameDisabled:
+		return color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0x42}
+	case theme.ColorNameError:
+		return color.NRGBA{R: 0xf4, G: 0x43, B: 0x36, A: 0xff}
+	case theme.ColorNameFocus:
+		return color.NRGBA{R: 0x21, G: 0x96, B: 0xf3, A: 0x7f}
+	case theme.ColorNameForeground:
+		return color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff}
+	case theme.ColorNameHover:
+		return color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xf}
+	case theme.ColorNameInputBackground:
+		return color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0x19}
+	case theme.ColorNamePlaceHolder:
+		return color.NRGBA{R: 0xb2, G: 0xb2, B: 0xb2, A: 0xff}
+	case theme.ColorNamePressed:
+		return color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0x66}
+	case theme.ColorNamePrimary:
+		return color.NRGBA{R: 0x21, G: 0x96, B: 0xf3, A: 0xff}
+	case theme.ColorNameScrollBar:
+		return color.NRGBA{R: 0x0, G: 0x0, B: 0x0, A: 0x99}
+	case theme.ColorNameShadow:
+		return color.NRGBA{R: 0x0, G: 0x0, B: 0x0, A: 0x66}
+	default:
+		return theme.DefaultTheme().Color(c, v)
+	}
+}
+
+func (myTheme) Font(s fyne.TextStyle) fyne.Resource {
+	if s.Monospace {
+		return theme.DefaultTheme().Font(s)
+	}
+	if s.Bold {
+		if s.Italic {
+			return theme.DefaultTheme().Font(s)
+		}
+		return theme.DefaultTheme().Font(s)
+	}
+	if s.Italic {
+		return theme.DefaultTheme().Font(s)
+	}
+	return theme.DefaultTheme().Font(s)
+}
+
+func (myTheme) Icon(n fyne.ThemeIconName) fyne.Resource {
+	return theme.DefaultTheme().Icon(n)
+}
+
+func (myTheme) Size(s fyne.ThemeSizeName) float32 {
+	switch s {
+	case theme.SizeNameCaptionText:
+		return 11
+	case theme.SizeNameInlineIcon:
+		return 20
+	case theme.SizeNamePadding:
+		return 4
+	case theme.SizeNameScrollBar:
+		return 16
+	case theme.SizeNameScrollBarSmall:
+		return 3
+	case theme.SizeNameSeparatorThickness:
+		return 1
+	case theme.SizeNameText:
+		return 14
+	case theme.SizeNameInputBorder:
+		return 2
+	default:
+		return theme.DefaultTheme().Size(s)
+	}
+}
 ```
