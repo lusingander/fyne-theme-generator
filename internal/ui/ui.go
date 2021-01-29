@@ -56,8 +56,8 @@ func (u *ui) setContent(showWidgets bool) {
 	u.window.SetContent(container)
 }
 
-func (u *ui) applyTheme(t fyne.Theme) {
-	u.current.UpdateTheme(t)
+func (u *ui) applyTheme(t fyne.Theme, v fyne.ThemeVariant) {
+	u.current.UpdateTheme(t, v)
 	u.configPanel.applyCurrentTheme()
 	u.refresh()
 }

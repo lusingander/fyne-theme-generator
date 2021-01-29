@@ -26,7 +26,7 @@ func (u *ui) newToolbarPanel() *toolbarPanel {
 	return p
 }
 
-func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme), refreshFunc func()) {
+func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme, fyne.ThemeVariant), refreshFunc func()) {
 	themeSelect := widget.NewSelect(theme.EmbeddedThemes, func(string) {})
 	themeSelect.SetSelectedIndex(0)
 	themeApplyButton := widget.NewButton("Apply", func() {
