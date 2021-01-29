@@ -152,8 +152,8 @@ func (*widgetsPanel) inputs() fyne.CanvasObject {
 	disabledEntry.SetText("Entry (disabled)")
 	validateEntry := widget.NewEntry()
 	validateEntry.SetPlaceHolder("Must contain a number")
-	// validateEntry.SetText("abc") // not working expectedly in v2...
 	validateEntry.Validator = validation.NewRegexp(`\d`, "Must contain a number")
+	validateEntry.SetText("abc")
 
 	selects := widget.NewSelect([]string{"Foo", "Bar", "Baz"}, func(string) {})
 	check := widget.NewCheck("Check", func(bool) {})
