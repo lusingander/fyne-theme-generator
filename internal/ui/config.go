@@ -235,24 +235,17 @@ func (p *configPanel) newColorSelector(defaultColor color.Color, update func(col
 		refresh: p.refresh,
 	}
 	selector.setColorAndRefresh(defaultColor)
-	// colorpicker doesn't currently consider alpha...
-	rect.SetOnChange(selector.setColorKeepAlpha)
+	rect.SetOnChange(selector.setColorAndRefresh)
 	entry.OnChanged = func(s string) {
 		var r, g, b, a uint8
 		l := len(s)
 		if l > 9 {
 			selector.setColorAndRefresh(selector.tmp)
 		} else if _, err := fmt.Sscanf(s, "#%02x%02x%02x%02x", &r, &g, &b, &a); l == 9 && err == nil {
-			selector.setColorAndRefresh(color.RGBA{r, g, b, a})
+			selector.setColorAndRefresh(color.NRGBA{r, g, b, a})
 		}
 	}
 	return selector
-}
-
-func (c *colorSelector) setColorKeepAlpha(clr color.Color) {
-	r, g, b, _ := clr.RGBA()
-	_, _, _, a := c.tmp.RGBA()
-	c.setColorAndRefresh(color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
 }
 
 func (c *colorSelector) setColorAndRefresh(clr color.Color) {
@@ -268,7 +261,7 @@ func (c *colorSelector) setColor(clr color.Color) {
 }
 
 func hexColorString(c color.Color) string {
-	rgba := color.RGBAModel.Convert(c).(color.RGBA)
+	rgba, _ := c.(color.NRGBA)
 	return fmt.Sprintf("#%.2X%.2X%.2X%.2X", rgba.R, rgba.G, rgba.B, rgba.A)
 }
 
