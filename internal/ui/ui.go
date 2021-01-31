@@ -18,8 +18,10 @@ type ui struct {
 }
 
 // Start app
-func Start(w fyne.Window) {
+func Start(w fyne.Window) error {
 	new(w).build()
+	w.ShowAndRun()
+	return nil
 }
 
 func new(w fyne.Window) *ui {

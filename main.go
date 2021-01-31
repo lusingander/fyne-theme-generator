@@ -15,9 +15,7 @@ const (
 func run(args []string) error {
 	a := app.New()
 	w := a.NewWindow(appTitle)
-	ui.Start(w)
-	w.ShowAndRun()
-	return nil
+	return ui.Start(w)
 }
 
 func main() {
