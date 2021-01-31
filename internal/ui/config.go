@@ -194,13 +194,6 @@ func floatConfigure(label string, selector *floatSelector) []fyne.CanvasObject {
 	}
 }
 
-func readonlyStringConfigure(label string, selector *readonlyStringSelector) []fyne.CanvasObject {
-	return []fyne.CanvasObject{
-		widget.NewLabel(label),
-		selector.str,
-	}
-}
-
 func fontFilepathConfigure(label string, selector *fontFilepathSelector) []fyne.CanvasObject {
 	return []fyne.CanvasObject{
 		widget.NewLabel(label),
@@ -292,21 +285,6 @@ func (s *floatSelector) setValue(v float32) {
 		return
 	}
 	s.entry.SetText(str)
-}
-
-type readonlyStringSelector struct {
-	str *widget.Label
-}
-
-func (p *configPanel) newReadonlyStringSelector(defaultValue string) *readonlyStringSelector {
-	str := widget.NewLabel(defaultValue)
-	return &readonlyStringSelector{
-		str: str,
-	}
-}
-
-func (s *readonlyStringSelector) setValue(v string) {
-	s.str.SetText(v)
 }
 
 type fontFilepathSelector struct {
