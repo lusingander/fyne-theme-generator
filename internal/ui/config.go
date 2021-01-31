@@ -230,7 +230,6 @@ func (p *configPanel) newColorSelector(defaultColor color.Color, update func(col
 	selector := &colorSelector{
 		entry:   entry,
 		rect:    rect,
-		tmp:     defaultColor,
 		update:  update,
 		refresh: p.refresh,
 	}
@@ -255,6 +254,9 @@ func (c *colorSelector) setColorAndRefresh(clr color.Color) {
 }
 
 func (c *colorSelector) setColor(clr color.Color) {
+	if c.tmp == clr {
+		return
+	}
 	c.tmp = clr
 	c.entry.SetText(hexColorString(clr))
 	c.rect.SetColor(clr)
@@ -285,7 +287,11 @@ func (p *configPanel) newFloatSelector(defaultValue float32, update func(float32
 }
 
 func (s *floatSelector) setValue(v float32) {
-	s.entry.SetText(strconv.FormatFloat(float64(v), 'f', 2, 32))
+	str := strconv.FormatFloat(float64(v), 'f', 2, 32)
+	if s.entry.Text == str {
+		return
+	}
+	s.entry.SetText(str)
 }
 
 type readonlyStringSelector struct {
@@ -326,6 +332,9 @@ func (p *configPanel) newFontFilepathSelector(defaultValue string, update func(f
 }
 
 func (s *fontFilepathSelector) setValue(v string) {
+	if s.entry.Text == v {
+		return
+	}
 	s.entry.SetText(v)
 }
 
