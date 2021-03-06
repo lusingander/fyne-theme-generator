@@ -1,5 +1,8 @@
-fyne-theme-generator
-====
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/lusingander/fyne-theme-generator)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lusingander/fyne-theme-generator)](https://goreportcard.com/report/github.com/lusingander/fyne-theme-generator)
+![GitHub](https://img.shields.io/github/license/lusingander/fyne-theme-generator)
+
+# fyne-theme-generator
 
 WYSIWYG theme editor for [Fyne](https://fyne.io/)
 
