@@ -252,7 +252,11 @@ func buildFontSource(t *Setting) ([]byte, error) {
 	buf.writeln("")
 	buf.writeln("package %s", t.packageName)
 	buf.writeln("")
-	buf.writeln("import \"fyne.io/fyne\"")
+	if t.ExportForV2() {
+		buf.writeln("import \"fyne.io/fyne/v2\"")
+	} else {
+		buf.writeln("import \"fyne.io/fyne\"")
+	}
 	buf.writeln("")
 	if t.isSetTextFont() {
 		buf.writeln("var %s = %#v\n", sanitiseName(t.textFont.Name()), t.textFont)
