@@ -128,3 +128,10 @@ func (myTheme) Size(s fyne.ThemeSizeName) float32 {
 	}
 }
 ```
+
+## Related projects
+
+- [colorpicker](https://github.com/lusingander/colorpicker)
+  - Color picker component for Fyne
+- [fyne-credits-generator](https://github.com/lusingander/fyne-credits-generator)
+  - Automatically generate credits(licenses) window for the Fyne application
