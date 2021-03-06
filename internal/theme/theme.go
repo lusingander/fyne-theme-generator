@@ -293,9 +293,9 @@ func (s *Setting) Font(style fyne.TextStyle) fyne.Resource {
 	}
 	if style.Bold {
 		if style.Italic {
-			return s.textBoldFont
+			return s.textBoldItalicFont
 		}
-		return s.textBoldItalicFont
+		return s.textBoldFont
 	}
 	if style.Italic {
 		return s.textItalicFont
