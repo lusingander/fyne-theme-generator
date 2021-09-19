@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	ft "fyne.io/fyne/v2/theme"
@@ -55,9 +56,9 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme, fyne.ThemeVariant),
 
 	exportButton := widget.NewButton("Export theme", p.export)
 
-	p.panel = fyne.NewContainerWithLayout(
+	p.panel = container.New(
 		layout.NewVBoxLayout(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewHBoxLayout(),
 			themeSelect,
 			themeApplyButton,
@@ -67,7 +68,7 @@ func (p *toolbarPanel) build(applyThemeFunc func(fyne.Theme, fyne.ThemeVariant),
 			themeStructNameLabel,
 			themeStructNameEntry,
 		),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewHBoxLayout(),
 			refreshButton,
 			layout.NewSpacer(),

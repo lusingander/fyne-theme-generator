@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/validation"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
@@ -45,7 +46,7 @@ func (p *widgetsPanel) disconnect(onClickConnect func()) {
 
 func (p *widgetsPanel) build(onClickDisconnect func()) {
 	p.connect(onClickDisconnect)
-	p.panel = fyne.NewContainerWithLayout(
+	p.panel = container.New(
 		layout.NewVBoxLayout(),
 		p.toolbar,
 		p.labels(),
@@ -102,14 +103,14 @@ func (*widgetsPanel) labels() fyne.CanvasObject {
 	return widget.NewCard(
 		"Labels",
 		"",
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewVBoxLayout(),
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewHBoxLayout(),
 				description,
 				link,
 			),
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewHBoxLayout(),
 				bold,
 				boldItalic,
@@ -134,7 +135,7 @@ func (p *widgetsPanel) buttons() fyne.CanvasObject {
 	return widget.NewCard(
 		"Buttons & Dialogs",
 		"",
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewHBoxLayout(),
 			info,
 			confirm,
@@ -166,19 +167,19 @@ func (*widgetsPanel) inputs() fyne.CanvasObject {
 	return widget.NewCard(
 		"Inputs",
 		"",
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewVBoxLayout(),
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewGridLayout(2),
 				entry,
 				disabledEntry,
 			),
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewGridLayout(2),
 				validateEntry,
 				selects,
 			),
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewGridLayout(2),
 				check,
 				disabledCheck,
@@ -208,7 +209,7 @@ func (*widgetsPanel) progresses() fyne.CanvasObject {
 	return widget.NewCard(
 		"Progresses",
 		"",
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewVBoxLayout(),
 			progress,
 			// progressInf,
@@ -223,7 +224,7 @@ func (*widgetsPanel) others() fyne.CanvasObject {
 	return widget.NewCard(
 		"Others",
 		"",
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewHBoxLayout(),
 			layout.NewSpacer(),
 			creditsButton,

@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"github.com/lusingander/fyne-theme-generator/internal/theme"
 )
@@ -43,9 +44,9 @@ func (u *ui) build() {
 }
 
 func (u *ui) setContent(showWidgets bool) {
-	container := fyne.NewContainerWithLayout(
+	container := container.New(
 		layout.NewHBoxLayout(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewVBoxLayout(),
 			u.configPanel.panel,
 			layout.NewSpacer(),

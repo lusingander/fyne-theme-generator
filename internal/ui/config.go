@@ -101,13 +101,13 @@ func (p *configPanel) build() {
 	if l%2 != 0 {
 		l++
 	}
-	p.panel = fyne.NewContainerWithLayout(
+	p.panel = container.New(
 		layout.NewHBoxLayout(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewGridLayoutWithColumns(2),
 			confs[:l]...,
 		),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewGridLayoutWithColumns(2),
 			confs[l:]...,
 		),
@@ -179,7 +179,7 @@ func (p *configPanel) configures(ts *theme.Setting) []fyne.CanvasObject {
 func colorConfigure(label string, selector *colorSelector) []fyne.CanvasObject {
 	return []fyne.CanvasObject{
 		widget.NewLabel(label),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewHBoxLayout(),
 			selector.rect,
 			selector.entry,
