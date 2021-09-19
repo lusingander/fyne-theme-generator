@@ -208,12 +208,11 @@ func fontFilepathConfigure(label string, selector *fontFilepathSelector) []fyne.
 }
 
 type colorSelector struct {
-	entry        *widget.Entry
-	rect         colorpicker.PickerOpenWidget
-	tmp          color.Color
-	update       func(color.Color)
-	sampleWidget fyne.CanvasObject
-	refresh      func()
+	entry   *widget.Entry
+	rect    colorpicker.PickerOpenWidget
+	tmp     color.Color
+	update  func(color.Color)
+	refresh func()
 }
 
 func (p *configPanel) newColorSelector(defaultColor color.Color, update func(color.Color)) *colorSelector {
@@ -288,12 +287,11 @@ func (s *floatSelector) setValue(v float32) {
 }
 
 type fontFilepathSelector struct {
-	parent   fyne.Window
-	entry    *widget.Entry
-	button   *widget.Button
-	filepath string
-	update   func(fyne.Resource)
-	refresh  func()
+	parent  fyne.Window
+	entry   *widget.Entry
+	button  *widget.Button
+	update  func(fyne.Resource)
+	refresh func()
 }
 
 func (p *configPanel) newFontFilepathSelector(defaultValue string, update func(fyne.Resource)) *fontFilepathSelector {
